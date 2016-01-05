@@ -1,0 +1,21 @@
+{
+	"name": "capstone",
+	"version": "0.0.1",
+	"description": "Jeff Fennell's senior capstone project",
+	"license": "MIT",
+	"author": {
+		"name": "Jeff Fennell",
+		"email": "jfennell@lion.lmu.edu",
+		"url": "jeff-fennell.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/jtfennell/capstone.git"
+	},
+	"dependencies": {
+		"express":"^4.13.3",
+		"morgan": "^1.6.1",
+		"dotenv": "^1.2.0",
+		"pg": "4.4.2"
+	}
+}
