@@ -12,10 +12,19 @@
 		"type": "git",
 		"url": "https://github.com/jtfennell/capstone.git"
 	},
+	"devDependencies": {
+		"mocha":"^2.3.4",
+		"chai":"^3.4.1"
+	},
 	"dependencies": {
 		"express":"^4.13.3",
 		"morgan": "^1.6.1",
 		"dotenv": "^1.2.0",
-		"pg": "4.4.2"
+		"pg": "^4.4.2",
+		"body-parser": "^1.14.2"
+	},
+	"scripts": {
+		"start": "node server/src/server.js",
+		"test": "mocha server/test"
 	}
 }
