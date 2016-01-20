@@ -21,5 +21,5 @@ Android client -> Node.js REST API
 
 <h3>Notable Android APIs</h3>
 <ul>
-  <li>Camera2</li>
+  <li><a href="http://developer.android.com/reference/android/hardware/camera2/package-summary.html">Camera2</li>
 </ul>
