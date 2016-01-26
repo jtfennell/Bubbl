@@ -3,4 +3,13 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="camera_dialog_title">Camera Access</string>
+    <string name="camera_dialog_message">(This app) needs camera permission to run. Camera preview will be unavailable until camera permission granted.</string>
+    <string name="camera_dialog_positive_button">Ok</string>
+    <string name="camera_dialog_negative_button">Exit app</string>
+    <string name="camera_dialog_neutral_button">Grant Permission</string>
+    <string name="device_not_supported_message">Your device is not compatible with this app. We are sorry about that :(</string>
+    <string name="request_permission">Give permission?</string>
+    <string name="camera_error">There was an error.</string>
+    <string name="intro_message">INFO</string>
 </resources>
