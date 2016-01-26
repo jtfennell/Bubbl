@@ -14,14 +14,16 @@
 	},
 	"devDependencies": {
 		"mocha":"^2.3.4",
-		"chai":"^3.4.1"
+		"chai":"^3.4.1",
+		"supertest":"1.1.0"
 	},
 	"dependencies": {
 		"express":"^4.13.3",
 		"morgan": "^1.6.1",
 		"dotenv": "^1.2.0",
 		"pg": "^4.4.2",
-		"body-parser": "^1.14.2"
+		"body-parser": "^1.14.2",
+		"jwt-simple": "^0.4.1"
 	},
 	"scripts": {
 		"start": "node server/src/server.js",

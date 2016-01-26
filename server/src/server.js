@@ -1,16 +1,39 @@
 var express    = require('express');
 var dotenv     = require('dotenv');
 var morgan     = require('morgan');
-var bodyParser = require('body-parser')
-var app        = express();
+var bodyParser = require('body-parser');
+var jwt        = require('jwt-simple');
+var fs         = require('fs');
+var https      = require('https');
+var http       = require('http');
+
+var tokens = require('./handlers/tokens');
+
+var app = express();
+
+var privateKey  = fs.readFileSync(`${__dirname}../../certs/server.key`);
+var certificate = fs.readFileSync(`${__dirname}../../certs/server.crt`);
+var credentials = {key:privateKey, cert:certificate};
 
 dotenv.load();
 
-app.use(morgan(process.env.LOGGING_LEVEL? process.env.LOGGING_LEVEL:'combined'));
-app.listen(process.env.API_PORT);
+var HTTP_PORT          = process.env.HTTP_PORT      || 8080;
+var HTTPS_PORT         = process.env.HTTPS_PORT     || 443;
+var LOGGING_LEVEL      = process.env.LOGGING_LEVEL  || 'combined';
 
-app.get('/', (req,res) => {
-	res.send('Hello World');
-});
+var methodNotAllowed = (req, res) => res.status(405).json({message: 'method not allowed'});
 
-console.log(`listening on port ${process.env.API_PORT}`);
+//unauthenticated routes
+app.get('/api/v1/tokens', tokens.register);
+app.post('/api/v1/tokens', tokens.refresh);
+app.all('/api/v1/tokens', methodNotAllowed)
+
+//authenticated routes
+
+app.use(morgan(LOGGING_LEVEL));
+
+http.createServer(app).listen(HTTP_PORT);
+https.createServer(credentials, app).listen(HTTPS_PORT);
+
+console.log(`http server listening on port ${HTTP_PORT}`);
+console.log(`https server listening on port ${HTTPS_PORT}`);
