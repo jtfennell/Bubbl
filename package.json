@@ -27,6 +27,6 @@
 	},
 	"scripts": {
 		"start": "node server/src/server.js",
-		"test": "mocha server/test -c -R spec"
+		"test": "mocha server/test -c -R spec -s 2000"
 	}
 }
