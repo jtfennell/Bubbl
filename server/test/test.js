@@ -46,7 +46,18 @@ describe('Bubbl api', function() {
                         .expect(200, done);
                     });
 
-                    it('creates and returns a jwt for the new user');
+                    it('creates and returns a jwt for the new user', function(done) {
+                        var user = {"username":"jeff","password":"password"}
+
+                        request
+                        .post('/api/v1/tokens')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.token.should.be.ok();
+                            done();
+                        });
+                    });
 
                     it('returns the id of the user', function(done) {
                         var user = {"username":"jeff","password":"password"}
@@ -58,11 +69,34 @@ describe('Bubbl api', function() {
                         .end(function(err, res) {
                             res.body.id.should.be.ok();
                             done();
-                        })
+                        });
                     });
 
-                    it('returns the first name of the user');
-                    it('returns the last name of the user');
+                    it('returns the first name of the user', function(done) {
+                        var user = {"username":"jeff","password":"password"}
+
+                        request
+                        .post('/api/v1/tokens')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.name.first.should.be.ok();
+                            done();
+                        });
+                    });
+
+                    it('returns the last name of the user', function(done) {
+                        var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
+
+                        request
+                        .post('/api/v1/tokens')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.name.first.should.be.ok();
+                            done();
+                        });
+                    });
                 });  
 
                 context('When user does not exist', function() {
@@ -92,7 +126,7 @@ describe('Bubbl api', function() {
                         .set('Accept', 'application/json')
                         .send(user)
                         .expect(400, done);
-                    })
+                    });
                 });
 
                 context('When username does not exist', function() {
@@ -223,7 +257,7 @@ describe('Bubbl api', function() {
                     })
 
                     it('returns the user id of the new user', function(done) {
-                        var user = {"username":"jeff","password":"password"}
+                        var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
 
                         request
                         .post('/api/v1/users')
@@ -232,12 +266,47 @@ describe('Bubbl api', function() {
                         .end(function(err, res) {
                             res.body.id.should.be.ok();
                             done();
-                        })
+                        });
                     });
 
-                    it('creates and returns a jwt for the new user');
-                    it('returns the first name of the user');
-                    it('returns the last name of the user');
+                    it('creates and returns a jwt for the new user', function(done) {
+                         var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
+
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.token.should.be.ok();
+                            done();
+                        });
+                    });
+
+                    it('returns the first name of the user', function(done) {
+                         var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
+
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.name.first.should.be.ok();
+                            done();
+                        });
+                    });
+
+                    it('returns the last name of the user', function(done) {
+                         var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
+
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            res.body.name.last.should.be.ok();
+                            done();
+                        });
+                    });
                 });
             });
 
