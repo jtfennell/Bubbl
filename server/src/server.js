@@ -7,7 +7,6 @@ var jwt         = require('jwt-simple');
 var fs          = require('fs');
 var https       = require('https');
 var http        = require('http');
-var oauthserver = require('oauth2-server');
 var users	    = require('./handlers/users');
 var tokens      = require('./handlers/tokens');
 
@@ -28,7 +27,7 @@ app.use(bodyParser.json());
 if (process.env.NODE_ENV !== 'test') {app.use(morgan(LOGGING_LEVEL));}
 	
 //unauthenticated routes
-app.post('/api/v1/users', users.create);
+app.post('/api/v1/users', users.createUser);
 app.all('api/v1/users', methodNotAllowed);
 
 app.post('/api/v1/tokens', tokens.generate);

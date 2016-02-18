@@ -15,7 +15,8 @@
 	"devDependencies": {
 		"mocha":"^2.3.4",
 		"chai":"^3.4.1",
-		"supertest":"1.1.0"
+		"supertest":"1.1.0",
+		"should":"8.2.1"
 	},
 	"dependencies": {
 		"express":"^4.13.3",
@@ -27,6 +28,6 @@
 	},
 	"scripts": {
 		"start": "node server/src/server.js",
-		"test": "mocha server/test -c -R spec -s 2000"
+		"test": "mocha server/test -c -R spec -s 2000 -t 4000"
 	}
 }
