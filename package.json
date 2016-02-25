@@ -28,6 +28,7 @@
 	},
 	"scripts": {
 		"start": "node server/src/server.js",
-		"test": "mocha server/test -c -R spec -s 2000 -t 4000"
+		"test": "mocha server/test -c -R spec -s 2000 -t 4000",
+		"deploy":"node ./scripts/db-redeploy.js"
 	}
 }
