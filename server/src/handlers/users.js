@@ -3,22 +3,36 @@ var tokens   = require('./tokens.js')
 
 var users = {
 	createUser: (req, res) => {
-        if (!(req.body.username && req.body.password && req.body.email)) {
-            return res.status(400).json({"message":"username, password, and email required"});
+        if (!(req.body.username 
+            && req.body.password 
+            && req.body.email
+            && req.body.firstName
+            && req.body.lastName)
+        ) {
+            return res.status(400).json({"message":"username, password, email, firstName, lastName required."});
         }
 
         if (req.body.password.length < 8) {
             return res.status(400).json({"message":"password too short"});
         };
-            
-        database.query(`INSERT INTO users(username,email,password) 
-                        VALUES('${req.body.username}','${req.body.email}',crypt('${req.body.password}',gen_salt('bf')))`,(err,result) =>{
+        
+        database.query(
+            `INSERT INTO users(username, email, password, first_name, last_name) 
+            VALUES(
+                '${req.body.username}',
+                '${req.body.email}', 
+                crypt('${req.body.password}',gen_salt('bf')),
+                '${req.body.firstName}',
+                '${req.body.lastName}'
+            )`,
+            (err,result) => {
                 if (err) {
-                   return res.status(400).json(err.code == 23505? {"message":`Username ${req.body.username} already exists`} : err)
+                    return res.status(400).json(err.code == 23505? {"message":`Username ${req.body.username} already exists`} : err)
                 };
-                res.status(201).json({"message":"successfully created new user"})
-            });
 
+                tokens.generate(req, res);
+            }
+        );
     },
 
     getUser: (username, password) => {
