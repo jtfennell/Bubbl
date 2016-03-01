@@ -9,19 +9,27 @@ var tokens = {
         }
 
         database.query(`SELECT * FROM users WHERE username='${req.body.username}' AND password=crypt('${req.body.password}', password)`, (err, result) => {
-            if (err) {return console.log("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")};
+            if (err) {return res.status(500).json('there was an internal server error')};
             
             if (!result.rows[0]) {
                 return res.status(404).json({'message':'username or password incorrect'});
             };
 
-            var tokenPayload = {} 
-
+            var lastName  = result.rows[0].last_name;
             var firstName = result.rows[0].first_name;
-            var lastName = result.rows[0].last_name; 
-            var userId   = result.rows[0].user_id;
+            var userId    = result.rows[0].user_id;
+            var email     = result.rows[0].email;
+            var username  = result.rows[0].username;
 
-            var token = jwt.encode(req.body, secretKey);
+            var tokenPayload = {
+                firstName: firstName,
+                lastName : lastName,
+                userId   : userId,
+                email    : email,
+                username : username
+            };
+
+            var token = jwt.encode(tokenPayload, secretKey);
         
             res.status(201).json({
                 "token":token,

@@ -2,7 +2,7 @@ var database = require('../../../database/pg-client.js');
 var tokens   = require('./tokens.js')
 
 var users = {
-	createUser: (req, res) => {
+	create: (req, res) => {
         if (!(req.body.username 
             && req.body.password 
             && req.body.email
@@ -27,6 +27,7 @@ var users = {
             )`,
             (err,result) => {
                 if (err) {
+                    console.log('here')
                     return res.status(400).json(err.code == 23505? {"message":`Username ${req.body.username} already exists`} : err)
                 };
 
