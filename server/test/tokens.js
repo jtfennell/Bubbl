@@ -202,17 +202,15 @@ describe('/api/v1/tokens', function() {
                     .expect(404, done)
                 });
 
-                it('does not return a token', function() {
-                    var user = {"username":"jeff","password":"password", "email" : "fake@email.com"}
-
-                    it('returns a 404 status code', function(done) {
-                        request
-                        .post('api/v1/tokens')
-                        .set('Accept', 'application/json')
-                        .send(user)
-                        .end(function(err, res) {
-                            res.body.token.should.not.be.ok();
-                        })
+                it('does not return a token', function(done) {
+                     request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
                     });
                 })
             });            
@@ -244,14 +242,27 @@ describe('/api/v1/tokens', function() {
                     .send(user)
                     .expect(404, done)
                 });
+
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    });
+                })
             });
 
             context('When password incorrect for username', function() {
-                it('returns 404  status code', function(done) {
-                    var user = {
+                var user = {
                         "username": "jeff",
                         "password": "theWrongPassword"
                     }
+                it('returns 404  status code', function(done) {
+                    
 
                     database.query(
                         `INSERT INTO users(
@@ -275,6 +286,18 @@ describe('/api/v1/tokens', function() {
                         .expect(404, done)
                     )
                 });
+                
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    });
+                })
             });
 
             context('When password missing', function() {
@@ -287,51 +310,97 @@ describe('/api/v1/tokens', function() {
                     .send(user)
                     .expect(400, done);
                 });
+
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token)
+                        done();
+                    });
+                });
             });
 
             context('When password is length 0', function() {
+                var user = {"username":"jeff", "email": "fake@email.com"};
+                
                 it('returns 400 status code', function(done){
-                    var user = {"username":"jeff", "email": "fake@email.com"};
-
                     request
                     .post('/api/v1/tokens')
                     .set('Accept', 'application/json')
                     .send(user)
                     .expect(400, done);
+                });
+
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    })
+                })
+            });
+
+            context('When username is length 0', function() {
+                var user = {"username":"", "password":"password"};
+                it('returns 400 status code', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .expect(400, done);
+                });
+
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    });
                 });
             });
 
             context('When username is length 0', function() {
+                var user = {"username":"", "password":"password"};
                 it('returns 400 status code', function(done) {
-                    var user = {"username":"", "password":"password"};
-
                     request
                     .post('/api/v1/tokens')
                     .set('Accept', 'application/json')
                     .send(user)
                     .expect(400, done);
                 });
-            });
 
-            context('When username is length 0', function() {
-                it('returns 400 status code', function(done) {
-                    var user = {"username":"", "password":"password"};
-
+                it('does not return a token', function(done) {
                     request
                     .post('/api/v1/tokens')
                     .set('Accept', 'application/json')
                     .send(user)
-                    .expect(400, done);
-                });
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done()
+                    });
+                })
             });
 
             context('When username invalid case', function() {
-                it('returns 404 status code', function(done) {
-                    var user = {
+                var user = {
                         "username": "Jeff",
                         "password": "password"
                     }
 
+                it('returns 404 status code', function(done) {
                     database.query(
                         `INSERT INTO users(
                             username,
@@ -354,15 +423,27 @@ describe('/api/v1/tokens', function() {
                         .expect(404, done)
                     );
                 });
+                
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done()
+                    });
+                })
             });
 
             context('When password invalid case', function() {
-                it('returns 400 status code', function(done) {
-                    var user = {
+                var user = {
                         "username": "jeff",
                         "password": "Password"
                     }
 
+                it('returns 400 status code', function(done) {
                     database.query(
                         `INSERT INTO users(
                             username,
@@ -385,6 +466,18 @@ describe('/api/v1/tokens', function() {
                         .expect(404, done)
                     );
                 });
+                
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    });
+                })
             });
         });
     })
