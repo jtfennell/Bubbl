@@ -38,10 +38,76 @@ describe('/api/v1/groups', function() {
                     .send(body)
                     .expect(401, done)
                 });
+
+                it('does not return any groups', function(done) {
+                    var body = {
+                        groupName:"daBestGroup"
+                    }
+
+                    request
+                    .get('/api/v1/groups')
+                    .set('Accept', 'application/json')
+                    .send(body)
+                    .end((err, res) => {
+                        should.not.exist(res.body.groups)
+                        done();
+                    });
+                })
             });
         });
 
         context('when request is valid', function() {
+            it('returns 200 status code', function(done) {
+                database.query(
+                    `INSERT INTO users (
+                        username,
+                        email,
+                        password,
+                        first_name,
+                        last_name
+                    ) 
+                    VALUES (
+                        'jeff',
+                        'fake@email.com',
+                        crypt('password',gen_salt('bf')),
+                        'Jeff',
+                        'Fennell'
+                    )`,
+                    function(err, result) {
+                        should.not.exist(err);
+                        database.query(
+                            `INSERT INTO groups (
+                            name,
+                            admin,
+                            created_on
+                        ) 
+                        VALUES (
+                            'daBestGroup',
+                            '1',
+                            ${(new Date()).getTime()}
+                        )`, function(err, result) {
+                                database.query(
+                                    `INSERT INTO group_contains_user (
+                                    group_id,
+                                    user_id
+                                ) 
+                                VALUES (
+                                    '1',
+                                    '1'
+                                )`, function(err, result) {
+                                    should.not.exist(err);
+                                    request
+                                    .get('/api/v1/groups')
+                                    .set('Content-Type', 'application/json')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                    .expect(200, done)
+                                });
+                            }
+                        )
+                    }
+                );
+            });
+
             it('returns the groups a user is in', function(done) {
                 database.query(
                     `INSERT INTO users (
@@ -86,11 +152,10 @@ describe('/api/v1/groups', function() {
                                     .set('Content-Type', 'application/json')
                                     .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                                     .end(function(err, res) {
-                                        res.body[0].group_id.should.be.ok()
+                                        res.body.groups[0].group_id.should.be.ok()
                                         done();
                                     });
                                 });
-                                
                             }
                         )
                     }
@@ -364,6 +429,298 @@ describe('/api/v1/groups', function() {
                     }
                 ); 
             }); 
+        });
+    });
+    
+    context('DELETE', function() {
+        context('when request invalid', function() {
+            context('when no access token provided', function() { 
+                it('returns 401 status code', function(done) {
+                    request
+                    .delete('/api/v1/groups/1')
+                    .expect(401, done)
+                });
+
+                it('does not delete the group', function(done) {
+                    database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, 
+                                function(err, result) { 
+                                    request
+                                    .delete('/api/v1/groups/1')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMiIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0In0.tjnyms0-7_Gg6ytGXO5g0CPL__szHoT8jQWZQLEd-34')
+                                    .end((err, res) => {
+                                        database.query(`SELECT * FROM GROUPS`, function(err, result) {
+                                            should.not.exist(err);
+                                            result.rows[0].should.be.ok();
+                                            done();
+                                        });
+                                    });
+                                }
+                            );
+                        }
+                    );
+                })
+            })
+
+            context('when user making request is not the admin', function() {
+                it('returns a 403 status code', function(done) {
+                     database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, 
+                                function(err, result) { 
+                                    request
+                                        .delete('/api/v1/groups/1')
+                                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMiIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0In0.tjnyms0-7_Gg6ytGXO5g0CPL__szHoT8jQWZQLEd-34')
+                                        .expect(403, done);
+                                }
+                            );
+                        }
+                    );
+
+
+
+                });
+
+                it('does not delete the group', function(done) {
+                    database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, 
+                                function(err, result) { 
+                                    request
+                                    .delete('/api/v1/groups/1')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMiIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0In0.tjnyms0-7_Gg6ytGXO5g0CPL__szHoT8jQWZQLEd-34')
+                                    .end((err, res) => {
+                                        database.query(`SELECT * FROM GROUPS`, function(err, result) {
+                                            should.not.exist(err);
+                                            result.rows[0].should.be.ok();
+                                            done();
+                                        });
+                                    });
+                                }
+                            );
+                        }
+                    );
+                });
+            });
+        });
+
+        context('when request valid', function() {
+            context('when group does not exist', function() {
+                it('returns 404 status code', function(done) {
+                    request
+                    .delete('/api/v1/groups/1')
+                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0NyJ9.RVVXyYgrVTeGLk1WzjD0Rbonq_LuSUeKwcFLj1dzt0A')
+                    .expect(404, done);
+                });
+            })
+
+            context('when group exists', function() {
+                it('returns 200 status code', function(done) {
+                    database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, 
+                                function(err, result) { 
+                                    should.not.exist(err);
+                                    request
+                                    .delete('/api/v1/groups/1')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0NyJ9.RVVXyYgrVTeGLk1WzjD0Rbonq_LuSUeKwcFLj1dzt0A')
+                                    .expect(200, done);
+                                }
+                            )
+                        }
+                    );
+                });
+
+                it('deletes the requested group', function(done) {
+                    database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, function(err, result) { 
+                                    request
+                                    .delete('/api/v1/groups/1')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                    .end((err, res) => {
+                                            database.query(`SELECT * FROM GROUPS`, function(err, result) {
+                                            should.not.exist(err);
+                                            should.not.exist(result.rows[0]);
+                                            done();
+                                        });
+                                    });
+                                }
+                            )
+                        }
+                    )
+                });
+                it('removes the users saved from the group', function(done) {
+                    database.query(
+                       `INSERT INTO users (
+                            username,
+                            email,
+                            password,
+                            first_name,
+                            last_name
+                        ) 
+                        VALUES (
+                            'jeff',
+                            'fake@email.com',
+                            crypt('password',gen_salt('bf')),
+                            'Jeff',
+                            'Fennell'
+                        )`,
+                        function(err, result) {
+                            should.not.exist(err);
+                            database.query(
+                                `INSERT INTO groups (
+                                    name,
+                                    admin,
+                                    created_on
+                                ) 
+                                VALUES (
+                                    'daBestGroup',
+                                    '1',
+                                    ${(new Date()).getTime()}
+                                )`, function(err, result) { 
+                                    request
+                                    .delete('/api/v1/groups/1')
+                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                    .end((err, res) => {
+                                            database.query(`SELECT * FROM group_contains_user WHERE group_id=1`, function(err, result) {
+                                            should.not.exist(err);
+                                            should.not.exist(result.rows[0]);
+                                            done();
+                                        });
+                                    });
+                                }
+                            )
+                        }
+                    )
+                });
+            })
         });
     });
 });

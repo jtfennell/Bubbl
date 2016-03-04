@@ -9,7 +9,7 @@ var groups = {
                 if (err) {
                     return res.status(500).json({"message":"there was an internal service error."});
                 };
-                return res.status(200).json(result.rows);
+                return res.status(200).json({"groups": result.rows});
             }
         );
     },
@@ -64,7 +64,40 @@ var groups = {
     },
 
     delete: (req, res) => {
+        var groupToDeleteId = req.params.groupId;
 
+        database.query(`SELECT * FROM groups WHERE group_id=${groupToDeleteId}`, (err, result) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({"message":"there was an error deleting group"});
+            };
+
+            if (!result.rows[0]) {
+                return res.status(404).json({"message":"can't find group"})
+            };
+
+            if (result.rows[0].admin !== req.authenticatedUser.userId) {
+                return res.status(403).json({"message":"not authorized to delete group"});
+            };
+
+             database.query(`DELETE FROM groups WHERE group_id=${groupToDeleteId}`, (err, result) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({"message":"there was an error deleting group"});
+            };
+
+            database.query(`DELETE FROM group_contains_user WHERE group_id=${groupToDeleteId}`, (err, result) => {
+                if (err) {
+                    console.log(err)
+                    return res.status(500).json({"message":"there was a error deleting group"});
+                };
+
+                return res.status(200).json({"message":"group deleted"});
+            });
+        });
+    });
+
+       
     },
 
     getMembersInGroup: (req, res) => {
