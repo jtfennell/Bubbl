@@ -81,8 +81,38 @@ describe('/api/v1/users', function() {
                         );
                     });
                     
-                    it('does not create a duplicate user', function() {
-                        
+                    it('does not create a duplicate user', function(done) {
+                        database.query(
+                            `INSERT INTO users(
+                                username,
+                                email,
+                                password,
+                                first_name,
+                                last_name
+                            ) 
+                            VALUES(
+                                'jeff',
+                                'fake@email.com',
+                                crypt('password',gen_salt('bf')),
+                                'Jeff',
+                                'Fennell'
+                            )`, (err,result) => {
+                                if (err) {
+                                    throw new Error(JSON.stringify(err));
+                                };
+
+                                request
+                                .post('/api/v1/users')
+                                .set('Accept', 'application/json')
+                                .send(user)
+                                .end(function(err, res) {
+                                        database.query(`SELECT * FROM users`, function(err, result) {
+                                        result.rows.length.should.be.eql(1);
+                                        done();
+                                    });
+                                });
+                            }
+                        );
                     })
                 });
 
@@ -193,14 +223,28 @@ describe('/api/v1/users', function() {
 
             context('When request is invalid', function() {
                 context('When request does not contain a username', function() {
-                    it('returns 400 status code', function(done) {
-                        var user = {"password":"jeff"}
+                    var user = {"password":"jeff"}
 
+                    it('returns 400 status code', function(done) {
                         request
                         .post('/api/v1/users')
                         .set('Accept', 'application/json')
                         .send(user)
                         .expect(400, done)
+                    });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            })
+                        });
                     });
                 });
 
@@ -214,6 +258,20 @@ describe('/api/v1/users', function() {
                         .send(user)
                         .expect(400, done)
                     });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            })
+                        });
+                    });
                 });
 
                  context('When request does not contain an email address', function() {
@@ -226,6 +284,20 @@ describe('/api/v1/users', function() {
                         .send(user)
                         .expect(400, done)
                     });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            })
+                        });
+                    })
                 });
 
                 context('When password is too short', function() {
@@ -237,6 +309,82 @@ describe('/api/v1/users', function() {
                         .set('Accept', 'application/json')
                         .send(user)
                         .expect(400, done)
+                    });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            })
+                        });
+                    });
+                });
+
+                context('When request does not contain user first name', function() {
+                    var user = {
+                        username:"jeff",
+                        password:"password",
+                        email:"dabest@email.com",
+                        lastName:"Fennell"
+                    }
+
+                    it('returns 400 status code', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .expect(400, done)
+                    });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            });
+                        });
+                    });
+                });
+
+                context('When request does not contain user last name', function(done) {
+                     var user = {
+                        username:"jeff",
+                        password:"password",
+                        email:"dabest@email.com",
+                        firstName:"Jeff"
+                    }
+
+                    it('returns 400 status code', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .expect(400, done)
+                    });
+
+                    it('does not create a user', function(done) {
+                        request
+                        .post('/api/v1/users')
+                        .set('Accept', 'application/json')
+                        .send(user)
+                        .end(function(err, res) {
+                            database.query('SELECT * FROM users', function(err, result) {
+                                should.not.exist(err);
+                                result.rows.length.should.be.eql(0);
+                                done();
+                            });
+                        });
                     });
                 });
             });

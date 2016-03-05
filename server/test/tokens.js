@@ -482,4 +482,3 @@ describe('/api/v1/tokens', function() {
         });
     })
 });
-

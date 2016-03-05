@@ -42,7 +42,7 @@ app.all('/api/v1/tokens', methodNotAllowed);
 
 app.post('/api/v1/groups',             [requireAccessToken, groups.create]);
 app.get('/api/v1/groups',              [requireAccessToken, groups.getByUser]);
-// app.delete('/api/v1/groups/:groupId', [requireAccessToken, groups.delete]);
+app.delete('/api/v1/groups/:groupId',  [requireAccessToken, groups.delete]);
 
 // app.get('/api/v1/groups/:groupId/members',             [requireAccessToken, groups.getMembersInGroup]);
 // app.post('/api/v1/groups/:groupId/members',             [requireAccessToken, groups.inviteNewMemberToGroup]);
