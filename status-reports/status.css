@@ -1,0 +1,385 @@
+
+body {
+   margin:           2em;
+   background-color: #eee;
+   color:            black;
+   font:             115% sans-serif;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+   font-family:      "Verdana", Times, serif;
+   letter-spacing:   .05ex;
+   border-radius: 11px 11px 11px 11px;
+}
+
+h1 {
+   color:            #08a;
+   background-color: #eee;
+   text-align:       left;
+   padding:          0.29em;
+   border-bottom:    3px solid #aaa;
+   border-right:     3px solid #aaa;
+   font-size:        325%;
+   line-height:      1.1em;
+}
+
+h2 {
+   background-color: #bbe0e3;
+   color:            #000099;
+   letter-spacing:   .1ex;
+   padding-top:      0.3em;
+   padding-bottom:   0.4em;
+   padding-left:     0.5em;
+   border-bottom:    3px solid #999;
+   border-right:     3px solid #999;
+   font-size:        200%;
+   font-weight:      bold;
+   line-height:      1.1em;
+}
+
+h3 {
+   background-color: #484864;
+   color:            #fff;
+   border-bottom:    3px solid #480032;
+   border-right:     3px solid #480032;
+   padding-top:      0.3em;
+   padding-bottom:   0.3em;
+   text-indent:      2em;
+   font-size:        160%;
+   font-style:       italic;
+   font-weight:      bold;
+}
+
+h4 {
+   background-color: #004000;
+   color:            #ddd;
+   font-size:        120%;
+   text-indent:      2em;
+   padding:          0.1em 0;
+   border-bottom:    3px solid #888;
+   border-right:     3px solid #888;
+}
+
+h5 {
+   background-color: #000050;
+   color:            #00cccc;
+   font-size:        110%;
+   text-indent:      2em;
+   padding:          0.1em;
+   border-bottom:    2px solid #888;
+   border-right:     2px solid #888;
+}
+
+h6 {
+   background-color: #ccc;
+   color:            #000;
+   font-size:        100%;
+   text-indent:      2em;
+   padding:          0.1em;
+   border-bottom:    2px solid #888;
+   border-right:     2px solid #888;
+}
+
+.nav      { float: left;  width:  13em;                      }
+.logo     { float: left;  width:  10em;  text-align: center; }
+.indent   { padding-left: 3em;                               }
+
+.colorrule1 {
+   color:            #08a;
+   width:            75%;
+   height:           3px;
+}
+
+.colorrule2 {
+   color:            #08a;
+   width:            200%;
+   height:           2px;
+}
+
+.colorrule3 {
+   color:            #08a;
+   width:            100%;
+   height:           3px;
+}
+
+hr          {
+   width:            100%;
+   height:           2px;
+}
+
+.classnav {
+   position:         absolute;
+   top:              10em;
+   left:             0.5em;
+   width:            14em;
+   background-color: #ccc;
+   padding:          10px 4px 4px 4px;
+   border-radius: 12px 12px 12px 12px;
+}
+
+.banner {
+   margin-left:      14em;
+   padding-left:     1em;
+   padding-right:    1em;
+   padding-top:      0.1em;
+   padding-bottom:   0.1em;
+   background:       #dfefff;
+   border-radius:    11px 11px 11px 11px;
+}
+
+.classheader {
+   position:         absolute;
+   top:              150px;
+   left:             2em;
+   text-align:       center;
+   width:            100%;
+}
+
+.classlist {
+   position:         relative;
+   left:             2em;
+   text-align:       left;
+   width:            70%
+}
+
+.abouttext1 {
+   margin-left:      14em;
+   padding-left:     1em;
+   padding-right:    1em;
+   text-align:       justify;
+}
+
+.abouttext2 {
+   text-align:       left;
+   float:            left;
+   padding-left:     1em;
+   padding-right:    1em;
+   width:            80%;
+}
+
+.abouttext3 {
+   text-align:       justify;
+   float:            left;
+   padding-left:     1em;
+   padding-right:    1em;
+   width:            95%;
+}
+
+.tiny {
+   position:         relative;
+   margin:           3em;
+   text-align:       left;
+   font-size:        75%;
+   float:            left;
+}
+
+.nextpage {
+   float:            left;
+   text-align:       right;
+   padding-left:     1em;
+   padding-right:    1em;
+   width:            95%;
+}
+
+.title, .subtitle, .deco, .redemphasis { font-weight: bold; }
+
+.redemphasis {
+   color:            red;
+   border-bottom:    2px solid #000;
+}
+
+.title {
+   font-family:      Arial, sans-serif;
+   line-height:      1em;
+   font-size:        125%;
+   padding-top:      0.75em;
+   padding-bottom:   0.75em;
+   letter-spacing:   0.75ex;
+   color:            #08a;
+   margin-top:       2em;
+}
+
+.subtitle {
+   font-family:      Arial, sans-serif;
+   font-size:        110%;
+   padding-bottom:   0.5em;
+   letter-spacing:   .2ex;
+   color:            #08a;
+   margin-top:       2em;
+}
+
+.deco {
+   font-family:      Verdana, Arial, sans-serif;
+   font-size:        90%;
+   letter-spacing:   .31ex;
+   padding-top:      0.25em;
+   padding-bottom:   0.25em;
+}
+
+.box {
+   border:           solid;
+   padding:          0 0.2em;
+   margin:           0 0.1ex;
+   border-width:     thin;
+}
+
+.hframe {
+   border-top:       2px solid #bbb;
+   border-bottom:    2px solid #bbb;
+   padding:          0;
+   margin:           1em 0
+}
+
+.description {
+   padding-left:     3em;
+   line-height:      normal;
+}
+
+pre {
+   white-space:      pre;
+   font-family:      "Courier New", monospace;
+   font-size:        100%;
+   line-height:      110%;
+   letter-spacing:   -0.08em;
+}
+
+pre.code {
+   background-color: #ddf;
+   padding:          0.75em;
+   border:           1px solid #88f;
+   white-space:      pre;
+}
+
+code {
+   font-size:        110%;
+   font-weight:      bold;
+   font-family:      "Courier New", monospace;
+   background-color: #fdfdfd;
+}
+
+p.centered, div.centered { text-align: center; }
+
+.listend {
+   padding-bottom:   1em;
+}
+
+tt          { font-family: "Courier New", monospace; }
+em          { font-style:  italic; background-color: #fdfdfd; }
+strong      { font-weight: bold; }
+.stress     { font-weight: bold; font-style: italic; background-color: #bbb; color: red; }
+.lit        { background-color: #0f0; color: black; }
+.past       { background-color: #aaa; color: black; }
+.deliv      { background-color: #800; color: white; font-weight: bold; }
+.semfun     { font: bold 125% cursive; }
+.reference  { text-align: center; font-size: 66%; font-style: italic; }
+.underline  { text-decoration:underline; }
+.assignment { text-decoration:underline; margin-left: 3em; }
+.assign     { text-decoration:underline; margin-left: 3em; }
+
+.register span {
+   text-align: center;
+   border: 1px solid black;
+   padding: 0.3em;
+   margin: 0px;
+}
+
+ul.spaced li     { margin-bottom: 3.0ex; }
+ol.spaced li     { margin-bottom: 3.0ex; }
+ul.compressed li { margin-bottom: 0.5ex; }
+ol.compressed li { margin-bottom: 0.5ex; }
+ol ul li         { list-style: lower-alpha; }
+dt               { font-weight: bold; margin-bottom: 0.4ex }
+.spacedlist      { margin-bottom: 3.0ex; }
+
+
+table {
+   font-family:         arial, helvetica, sans-serif;
+   border-collapse:     collapse;
+   border:              1px solid black;
+   margin-left:         auto;
+   margin-right:        auto;
+}
+
+table.layout, table.layout tr, table.layout td {
+   font-family:         arial, helvetica, sans-serif;
+   border-collapse:     collapse;
+   border-color:        #eee;
+   background-color:    #eee;
+   border:              0px;
+}
+
+table.borderless, table.borderless tr, table.borderless td {
+   background-color:    #eff;
+   border-width:        0px;
+}
+
+table.centered  { width: 80%; margin-left: 10%; }
+table.fullwidth { width: 100%; }
+table.opcode    { width: 100%; }
+
+th {
+   background-color:    #5bf;
+   color:               black;
+   font-family:         arial, helvetica, sans-serif;
+   padding:             0.4em;
+   border:              1px solid black;
+   text-align:          center;
+}
+
+td {
+   vertical-align:      top;
+   background-color:    #dff;
+   color:               black;
+   padding:             0.2em 0.4em;
+   border:              1px solid black;
+}
+
+td.nowrap {  }
+
+td.lit {
+   vertical-align:      top;
+   background-color:    #0f6;
+   color:               black;
+   padding:             0.2em 0.4em;
+   border:              1px solid black;
+}
+
+td.past {
+   vertical-align:      top;
+   background-color:    #666;
+   color:               #aaa;
+   padding:             0.2em 0.4em;
+   border:              1px solid black;
+}
+
+td.normal {
+   vertical-align:      middle;
+   background-color:    #eee;
+   padding:             0.2em 0.4em;
+}
+
+.opcode td, .opcode th {
+   font-family:         arial, helvetica, sans-serif;
+   font-size:           67%;
+   text-align:          center;
+}
+
+blockquote {
+   padding: 1em;
+   background-color: #ddeaff;
+   border: 1px dashed #00f;
+   width: 75%;
+   margin: 0% 10%;
+   margin-top: 3.0ex;
+   margin-bottom: 3.0ex;
+}
+
+blockquote p, blockquote ul, blockquote ol, blockquote li {
+   background-color: inherit;
+}
+
+a img     { border-style: none; color: white; }
+a:link    { color: blue; }
+a:visited { color: purple; }
+a:hover   { color: red; background-color: #ffffcc; }
