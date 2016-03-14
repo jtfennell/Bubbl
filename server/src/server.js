@@ -10,6 +10,7 @@ var http        = require('http');
 var users	    = require('./handlers/users');
 var tokens      = require('./handlers/tokens');
 var groups      = require('./handlers/groups');
+var invites     = require('./handlers/invites');
 
 var requireAccessToken = require('./middleware/requireAccessToken');
 
@@ -33,24 +34,29 @@ var methodNotAllowed = (req, res) => res.status(405)
 app.use(bodyParser.json());
 if (process.env.NODE_ENV !== 'test') {app.use(morgan(LOGGING_LEVEL));}
 	
-
 app.post('/api/v1/users', users.create);
 app.all('/api/v1/users', methodNotAllowed);
 
 app.post('/api/v1/tokens', tokens.generate);
 app.all('/api/v1/tokens', methodNotAllowed);
 
-app.post('/api/v1/groups',             [requireAccessToken, groups.create]);
-app.get('/api/v1/groups',              [requireAccessToken, groups.getByUser]);
-app.delete('/api/v1/groups/:groupId',  [requireAccessToken, groups.delete]);
+app.get('/api/v1/groups',             [requireAccessToken, groups.getByUser]);
+app.post('/api/v1/groups',            [requireAccessToken, groups.create]);
+app.delete('/api/v1/groups/:groupId', [requireAccessToken, groups.delete]);
 
-// app.get('/api/v1/groups/:groupId/members',             [requireAccessToken, groups.getMembersInGroup]);
+app.get('/api/v1/groups/invites',     [requireAccessToken, invites.getForUser]);
+app.post('/api/v1/groups/invites',    [requireAccessToken, invites.accept]);
+app.delete('/api/v1/groups/invites/:inviteId',  [requireAccessToken, invites.delete]);
+
+app.use('/api/v1/groups',             methodNotAllowed);
+
+// app.get('/api/v1/groups/:groupId/members',              [requireAccessToken, groups.getMembersInGroup]);
 // app.post('/api/v1/groups/:groupId/members',             [requireAccessToken, groups.inviteNewMemberToGroup]);
 // app.delete('/api/v1/groups/:groupId/members/:memberId', [requireAccessToken, groups.deleteMember]);
 
-// app.get('/api/v1/groups/invites',           [requireAccessToken, groups.getInvitesForUser]);
-// app.post('/api/v1/groups/invites',          [requireAccessToken, groups.respondToInvite]);
-// app.use('/api/v1/groups',                   methodNotAllowed);
+//app.get('/api/v1/groups/images', [requireAccessToken])
+//app.post('/api/v1/groups/images', [requireAccessToken])
+//app.delete('/api/v1/groups/images/:imageId', [requireAccessToken])
 
 http.createServer(app).listen(HTTP_PORT);
 https.createServer(credentials, app).listen(HTTPS_PORT);
