@@ -11,6 +11,8 @@ var users	    = require('./handlers/users');
 var tokens      = require('./handlers/tokens');
 var groups      = require('./handlers/groups');
 var invites     = require('./handlers/invites');
+var members     = require('./handlers/members');
+//var albums      = require('./handlers/albums');
 
 var requireAccessToken = require('./middleware/requireAccessToken');
 
@@ -43,20 +45,30 @@ app.all('/api/v1/tokens', methodNotAllowed);
 app.get('/api/v1/groups',             [requireAccessToken, groups.getByUser]);
 app.post('/api/v1/groups',            [requireAccessToken, groups.create]);
 app.delete('/api/v1/groups/:groupId', [requireAccessToken, groups.delete]);
-
-app.get('/api/v1/groups/invites',     [requireAccessToken, invites.getForUser]);
-app.post('/api/v1/groups/invites',    [requireAccessToken, invites.accept]);
-app.delete('/api/v1/groups/invites/:inviteId',  [requireAccessToken, invites.delete]);
-
 app.use('/api/v1/groups',             methodNotAllowed);
 
-// app.get('/api/v1/groups/:groupId/members',              [requireAccessToken, groups.getMembersInGroup]);
-// app.post('/api/v1/groups/:groupId/members',             [requireAccessToken, groups.inviteNewMemberToGroup]);
-// app.delete('/api/v1/groups/:groupId/members/:memberId', [requireAccessToken, groups.deleteMember]);
+app.get('/api/v1/invites',               [requireAccessToken, invites.getForUser]);
+app.post('/api/v1/invites',              [requireAccessToken, invites.accept]);
+app.delete('/api/v1/invites/:inviteId',  [requireAccessToken, invites.delete]);
+app.use('/api/v1/invites',               methodNotAllowed);
 
-//app.get('/api/v1/groups/images', [requireAccessToken])
-//app.post('/api/v1/groups/images', [requireAccessToken])
-//app.delete('/api/v1/groups/images/:imageId', [requireAccessToken])
+app.get('/api/v1/members',              [requireAccessToken, members.getByGroup]);
+app.post('/api/v1/members',             [requireAccessToken, members.invite]);
+app.delete('/api/v1/members/:memberId', [requireAccessToken, members.removeFromGroup]);
+app.use('/api/v1/members',              methodNotAllowed);
+
+//app.get('/api/v1/images', [requireAccessToken])
+//app.post('/api/v1/images', [requireAccessToken])
+//app.delete('/api/v1/images/:imageId', [requireAccessToken])
+
+//app.get('/api/v1/albums', [requireAccessToken, albums.getByGroup])
+//app.post('/api/v1/albums', [requireAccessToken, albums.create])
+//app.delete('/api/v1/albums', [requireAccessToken, albums.delete])
+
+//app.get('/api/v1/groups/:groupId/images', [requireAccessToken])
+//app.post('/api/v1/groups/:groupId/images', [requireAccessToken])
+//app.delete('/api/v1/groups/:groupId/images/:imageId', [requireAccessToken])
+
 
 http.createServer(app).listen(HTTP_PORT);
 https.createServer(credentials, app).listen(HTTPS_PORT);
