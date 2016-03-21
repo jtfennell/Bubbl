@@ -145,14 +145,14 @@ describe('api/v1/members', function() {
             context('when no groupId query parameter provided', function() {
                 it('returns 400 status code', function(done) {
                     request
-                    .get('/api/v1/members')
+                    .get('/api/v1/members?userId=1')
                     .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                     .expect(400, done);
                 });
                 
                 it('does not return a list of members', function(done) {
                     request
-                    .get('/api/v1/members')
+                    .get('/api/v1/members?userId=1')
                     .end(function(err, res) {
                         should.not.exist(res.body.members);
                         done();
@@ -162,25 +162,134 @@ describe('api/v1/members', function() {
         });
 
         context('when request valid', function() {
-            it('returns 200 status code', function(done) {
-                createGroupWithTwoMembers(function() {
-                    request
-                    .get('/api/v1/members?groupId=1')
-                    .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
-                    .expect(200, done);
+            context('when user is a member of the group', function() {
+                it('returns 200 status code', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .expect(200, done);
+                    });
+                });
+
+                it('returns list of members in specified group', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            res.body.members.length.should.be.eql(2);
+                            done();
+                        });
+                    });
+                });
+
+                it('does not return user passwords', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.not.exist(res.body.members[0].password);
+                            should.not.exist(res.body.members[1].password);
+                            done();
+                        });
+                    });
+                });
+
+                it('returns user first names', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.exist(res.body.members[0].first_name);
+                            should.exist(res.body.members[1].first_name);
+                            done();
+                        });
+                    });
+                });
+
+                it('returns user last names', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.exist(res.body.members[0].last_name);
+                            should.exist(res.body.members[1].last_name);
+                            done();
+                        });
+                    });
+                });
+
+                it('returns user emails', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.exist(res.body.members[0].email);
+                            should.exist(res.body.members[1].email);
+                            done();
+                        });
+                    });
+                });
+
+                it('returns user ids', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.exist(res.body.members[0].user_id);
+                            should.exist(res.body.members[1].user_id);
+                            done();
+                        });
+                    });
+                });
+
+                it('returns usernames', function(done){
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                        .end(function(err, res){
+                            should.exist(res.body.members);
+                            should.exist(res.body.members[0].username);
+                            should.exist(res.body.members[1].username);
+                            done();
+                        });
+                    });
                 });
             });
 
-            it('returns list of members in specified group', function(done) {
-                createGroupWithTwoMembers(function() {
-                    request
-                    .get('/api/v1/members?groupId=1')
-                    .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
-                    .end(function(err, res){
-                        should.exist(res.body.members);
-                        console.log(res);
-                        res.body.members.length.should.be.eql(2);
-                        done();
+            context('when user is not a member of the group', function() {
+                it('returns 403 status code', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJmaXJzdE5hbWUxIiwibGFzdE5hbWUiOiJkYUxhc3ROYW1lIiwidXNlcklkIjoiMyIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZEYUR1ZGU3In0.z1eImfw9wxJqlj_mY2e0TsuFL82RIXXAgybGt01DTOY')
+                        .expect(403, done);
+                    });
+                });
+
+                it('does not return a list of members', function(done) {
+                    createGroupWithTwoMembers(function() {
+                        request
+                        .get('/api/v1/members?groupId=1')
+                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJmaXJzdE5hbWUxIiwibGFzdE5hbWUiOiJkYUxhc3ROYW1lIiwidXNlcklkIjoiMyIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZEYUR1ZGU3In0.z1eImfw9wxJqlj_mY2e0TsuFL82RIXXAgybGt01DTOY')
+                        .end(function(err, res) {
+                            should.not.exist(err);
+                            should.not.exist(res.body.members);
+                            done()
+                        });
                     });
                 });
             });
@@ -233,7 +342,7 @@ describe('api/v1/members', function() {
                                 'SELECT * FROM user_invited_to_group',
                                 function(err, result) {
                                     should.not.exist(err);
-                                    result.rows[0].length.should.be.eql(0);
+                                    should.not.exist(result.rows[0]);
                                     done();
                                 }
                             );
@@ -242,7 +351,7 @@ describe('api/v1/members', function() {
                 });
             });
 
-            context('when no userId query parameter provided', function() {
+            context('when no username query parameter provided', function() {
                 it('returns 400 status code', function(done) {
                     createGroupWithTwoMembers(function() {
                         request
@@ -262,7 +371,7 @@ describe('api/v1/members', function() {
                                 'SELECT * FROM user_invited_to_group',
                                 function(err, result) {
                                     should.not.exist(err);
-                                    result.rows[0].length.should.be.eql(0);
+                                    result.rows.length.should.be.eql(0);
                                     done();
                                 }
                             );
@@ -274,51 +383,177 @@ describe('api/v1/members', function() {
         
         context('when request valid', function() {
             context('when user requesting is the group admin', function() {
-                it('returns 204 status code', function(done) {
-                    createGroupWithTwoMembers(function() {
-                        request
-                        .post('/api/v1/members?groupId=1')
-                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
-                        .expect(204, done)
+                context('when the user to invite is already in the group', function() {
+                    it('returns 200 status code', function(done) {
+                        createGroupWithTwoMembers(function() {
+                            request
+                            .post('/api/v1/members?groupId=1&userId=2')
+                            .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                            .expect(200, done);
+                        });
+                    });
+
+                    it('does not create a new invite', function(done) {
+                        createGroupWithTwoMembers(function() {
+                            request
+                            .post("/api/v1/members?groupId=1&userId=2")
+                            .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                            .end(function(err, res) {
+                                should.not.exist(err);
+                                database.query(
+                                    'SELECT * FROM user_invited_to_group',
+                                    function(err, result) {
+                                        should.not.exist(err);
+                                        should.not.exist(result.rows);
+                                        done();
+                                    }
+                                );
+                            });
+                        });
                     });
                 });
 
-                it('creates an invite for the user', function(done) {
-                    createGroupWithTwoMembers(function() {
-                        database.query(
-                            `INSERT INTO users(
-                                username,
-                                email,
-                                password,
-                                first_name,
-                                last_name
-                            ) 
-                            VALUES(
-                                'jeff7',
-                                'fake@email.com',
-                                crypt('password',gen_salt('bf')),
-                                'Jeff',
-                                'Fennell'
-                            )`,
-                            function() {
-                                request
-                                .post('/api/v1/members?groupId=1&userId=3')
-                                .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
-                                .end(function(err, res) {
+                context('when the user to invite is not already in the group', function() {
+                    context('when the user has an open invite to that group', function() {
+                        it('returns 200 status code', function(done) {
+                            createGroupWithTwoMembers(function() {
+                                database.query(
+                                   `INSERT INTO users(
+                                        username,
+                                        email,
+                                        password,
+                                        first_name,
+                                        last_name
+                                    ) 
+                                    VALUES(
+                                        'jeff23423',
+                                        'fake@email.com',
+                                        crypt('password',gen_salt('bf')),
+                                        'Jeff',
+                                        'Fennell'
+                                    )`, function(err, result) {
+                                        should.not.exist(err);
+                                        database.query(
+                                            `INSERT INTO user_invited_to_group
+                                                (
+                                                 user_id,
+                                                 group_id   
+                                                )
+                                            VALUES
+                                            (
+                                                3,
+                                                1
+                                            )`, function(err, result) {
+                                                should.not.exist(err);
+                                                request
+                                                .post('/api/v1/members?groupId=1&userId=3')
+                                                .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                                .expect(200, done)
+                                            }
+                                        )
+                                    }
+                                );
+                            });
+                        });
+
+                        it('does not create another invite for the user', function(done) {
+                            database.query(
+                               `INSERT INTO users(
+                                    username,
+                                    email,
+                                    password,
+                                    first_name,
+                                    last_name
+                                ) 
+                                VALUES(
+                                    'jeff23423',
+                                    'fake@email.com',
+                                    crypt('password',gen_salt('bf')),
+                                    'Jeff',
+                                    'Fennell'
+                                )`, function(err, result) {
                                     should.not.exist(err);
                                     database.query(
-                                        'SELECT * FROM user_invited_to_group',
-                                        function(err, result) {
+                                        `INSERT INTO user_invited_to_group
+                                        (
+                                             user_id,
+                                             group_id   
+                                        )
+                                        VALUES
+                                        (
+                                            3,
+                                            1
+                                        )`, function(err, result) {
                                             should.not.exist(err);
-                                            should.exist(result.rows[0]);
-                                            result.rows[0].user_id.should.be.eql(3);
-                                            result.rows[0].group_id.should.be.eql(1);
+                                            request
+                                            .post('/api/v1/members?groupId=1&userId=3')
+                                            .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                            .end(function(err, res) {
+                                                database.query(
+                                                    'SELECT * FROM user_invited_to_group',
+                                                    function(err, result) {
+                                                        should.not.exist(err);
+                                                        should.not.exist(result.rows);
+                                                        done();
+                                                    }
+                                                );
+                                            });
                                         }
-                                    );
-                                });
-                            }
-                        );
+                                    )
+                                }
+                            );
+                        });
                     });
+
+                    context('when the user does not have an open invite to that group', function() {
+                        it('returns 204 status code', function(done) {
+                            createGroupWithTwoMembers(function() {
+                                request
+                                .post('/api/v1/members?groupId=1')
+                                .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                .expect(204, done)
+                            });
+                        });
+
+                        it('creates an invite for the user', function(done) {
+                            createGroupWithTwoMembers(function() {
+                                database.query(
+                                    `INSERT INTO users(
+                                        username,
+                                        email,
+                                        password,
+                                        first_name,
+                                        last_name
+                                    ) 
+                                    VALUES(
+                                        'jeff7',
+                                        'fake@email.com',
+                                        crypt('password',gen_salt('bf')),
+                                        'Jeff',
+                                        'Fennell'
+                                    )`,
+                                    function() {
+                                        request
+                                        .post('/api/v1/members?groupId=1&userId=3')
+                                        .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
+                                        .end(function(err, res) {
+                                            should.not.exist(err);
+                                            database.query(
+                                                'SELECT * FROM user_invited_to_group',
+                                                function(err, result) {
+                                                    should.not.exist(err);
+                                                    should.exist(result.rows[0]);
+                                                    result.rows[0].user_id.should.be.eql(3);
+                                                    result.rows[0].group_id.should.be.eql(1);
+                                                    done();
+                                                }
+                                            );
+                                        });
+                                    }
+                                );
+                            });
+                        });
+                    })
                 });
             });
             
