@@ -31,7 +31,7 @@ var groups = {
                 '${(new Date()).getTime()}',
                 '${req.authenticatedUser.userId}'
             )
-            RETURNING group_id`,
+            RETURNING group_id, name, created_on, admin`,
             (err, result) => {
                 if (err) {
                     console.log(err)
@@ -39,6 +39,13 @@ var groups = {
                 };
 
                 addUserToGroup(result.rows[0].group_id);
+                
+                return res.status(204).json({
+                    name: result.rows[0].name,
+                    createdOn: result.rows[0].created_on,
+                    admin: result.rows[0].admin,
+                    groupId: result.rows[0].group_id
+                });
             }
         );
 
@@ -135,11 +142,11 @@ var groups = {
     },
 
     deleteMember: (req, res) => {
-
+        
     },
 
     getInvitesForUser: (req, res) => {
-
+        
     },
 
     respondToInvite: (req, res) => {
