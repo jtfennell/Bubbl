@@ -12,9 +12,15 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+//            buildConfigField "String", "API_BASE_URL", "\"http://localhost:8000/api/v1/\""
+//            buildConfigField "String", "API_BASE_URL", "\"http://10.0.1.219:8000/api/v1/\""
+            buildConfigField "String", "API_BASE_URL", "\"http://192.168.1.92:8080/api/v1/\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_BASE_URL", "\"http://192.168.1.92:8080/api/v1/\""
         }
     }
     compileOptions {
@@ -35,4 +41,8 @@ dependencies {
 
     compile 'com.adobe.creativesdk.foundation:auth:0.7.329'
     compile 'com.adobe.creativesdk:image:4.0.0'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+
 }
