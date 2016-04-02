@@ -1,9 +1,9 @@
 package com.jeff_fennell.capstone;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
-public class Camera extends AppCompatActivity {
+public class Camera extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -12,6 +12,11 @@ public class Camera extends AppCompatActivity {
         if (savedInstanceState == null) {
             loadCameraFragment();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void loadCameraFragment() {
