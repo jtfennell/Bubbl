@@ -227,6 +227,18 @@ describe('/api/v1/tokens', function() {
                     .send(user)
                     .expect(400, done);
                 });
+
+                it('does not return a token', function(done) {
+                    request
+                    .post('/api/v1/tokens')
+                    .set('Accept', 'application/json')
+                    .send(user)
+                    .end(function(err, res) {
+                        should.not.exist(err);
+                        should.not.exist(res.body.token);
+                        done();
+                    });
+                })
             });
 
             context('When username does not exist', function() {
