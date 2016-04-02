@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jeff_fennell.capstone.Login">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_username_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AppCompat">
+        <android.support.v7.widget.AppCompatEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_username_hint"
+            android:id="@+id/login_username"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_password_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.AppCompat">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_password_hint"
+            android:id="@+id/login_password"/>
+    </android.support.design.widget.TextInputLayout>
+    <com.alertdialogpro.material.ButtonCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/borderlessButtonStyle"
+        android:hint="@string/login_button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="validateInputsAndAttemptLogin"/>
+    <com.alertdialogpro.material.ButtonCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/borderlessButtonStyle"
+        android:hint="@string/create_account"
+        android:layout_gravity="center_horizontal"
+        android:onClick="launchCreateAccount"/>
+</LinearLayout>

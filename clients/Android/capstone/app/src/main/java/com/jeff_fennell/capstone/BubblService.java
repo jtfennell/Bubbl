@@ -1,5 +1,6 @@
 package com.jeff_fennell.capstone;
 
+import com.jeff_fennell.capstone.entities.LoginResult;
 import com.jeff_fennell.capstone.entities.Group;
 import com.jeff_fennell.capstone.entities.Invite;
 import com.jeff_fennell.capstone.entities.User;
@@ -19,7 +20,7 @@ public interface BubblService {
     Call<User> createUser (@Body User user);
 
     @POST("tokens")
-    Call<String> login (@Body User user);
+    Call<LoginResult> login (@Body User user);
 
     @GET("groups")
     Call<List<Group>> getGroups(@Body User user, @Header("x-access-token") String token);

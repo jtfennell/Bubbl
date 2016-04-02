@@ -12,4 +12,27 @@
     <string name="request_permission">Give permission?</string>
     <string name="camera_error">There was an error.</string>
     <string name="intro_message">INFO</string>
+    <string name="title_activity_require_login">RequireLoginActivity</string>
+    <string name="title_activity_login">Login</string>
+    <string name="create_account">Create Account</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Log in</string>
+    <string name="login_username_invalid">Please enter your username.</string>
+    <string name="login_password_invalid">Please enter your password.</string>
+
+    <string name="title_activity_create_account">CreateAccount</string>
 </resources>
