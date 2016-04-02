@@ -21,6 +21,10 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (UserProfile.isLoggedIn(this)) {
+            launchCamera();
+        }
     }
 
     public void launchCreateAccount(View view) {
@@ -84,17 +88,15 @@ public class Login extends Activity {
                 .build();
         BubblService api = retrofit.create(BubblService.class);
 
-        Call loginUser = api.login(user);
+        Call<LoginResult> loginUser = api.login(user);
         loginUser.enqueue(new Callback<LoginResult>() {
             @Override
             public void onResponse(Call call, Response response) {
                 int code = response.code();
 
                 if (response.isSuccessful()) {
-                    LoginResult loginResult = (LoginResult)response.body();
-                    String token = loginResult.getToken();
-                    User loggedInUser = loginResult.getUser();
-
+                    LoginResult userInfo = (LoginResult)response.body();
+                    persist(userInfo);
                     launchCamera();
                 } else {
                     Context context = getApplicationContext();
@@ -103,7 +105,6 @@ public class Login extends Activity {
 
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-//                    displayErrorMessage();
                 }
             }
 
@@ -118,8 +119,18 @@ public class Login extends Activity {
             }
         });
     }
+
     private void launchCamera() {
         Intent camera = new Intent(this, Camera.class);
         startActivity(camera);
+    }
+
+    private void persist(LoginResult userLoginInfo) {
+        User user = userLoginInfo.getUser();
+        UserProfile.saveAuthenticationToken(userLoginInfo.getToken(), this);
+        UserProfile.saveUserId(user.getUserId(), this);
+        UserProfile.saveFirstName(user.getFirstName(), this);
+        UserProfile.saveLastName(user.getLastName(), this);
+        UserProfile.saveLoginStatus(this);
     }
 }
