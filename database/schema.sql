@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS group_contains_user (
 );
 
 CREATE TABLE IF NOT EXISTS user_invited_to_group (
+    invite_id bigserial PRIMARY KEY,
     user_id bigint NOT NULL references users,
-    group_id bigint NOT NULL references groups,
-    PRIMARY KEY (group_id, user_id)
+    group_id bigint NOT NULL references groups
 );
