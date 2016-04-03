@@ -24,7 +24,7 @@
             android:name=".Camera"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login"
@@ -37,9 +37,13 @@
         </activity>
         <activity
             android:name=".CreateAccount"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_create_account"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:parentActivityName=".Login"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jeff_fennell.capstone.Login" />
+        </activity>
     </application>
 
 </manifest>

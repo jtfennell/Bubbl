@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 public interface BubblService {
 
     @POST("users")
-    Call<User> createUser (@Body User user);
+    Call<LoginResult> createUser (@Body User user);
 
     @POST("tokens")
     Call<LoginResult> login (@Body User user);

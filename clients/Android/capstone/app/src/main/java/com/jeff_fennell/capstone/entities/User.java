@@ -19,6 +19,14 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public User(String username, String password, String firstName, String lastName, String email) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -72,4 +80,5 @@ public class User implements Serializable {
         this.email = email;
         return this;
     }
+
 }

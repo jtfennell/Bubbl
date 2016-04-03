@@ -35,4 +35,17 @@
     <string name="login_password_invalid">Please enter your password.</string>
 
     <string name="title_activity_create_account">CreateAccount</string>
+    <string name="create_account_first_name">First Name</string>
+    <string name="create_account_last_name">Last Name</string>
+    <string name="create_account_username">Username</string>
+    <string name="create_account_pasword">Password</string>
+    <string name="create_account_confirm_password">Confirm Password</string>
+    <string name="create_account_email">Email Address</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="create_account_username_error">Username must be at least 4 characters.</string>
+    <string name="create_account_first_name_error">Please enter your first name.</string>
+    <string name="create_account_last_name_error">Please enter your last name.</string>
+    <string name="create_account_password_error">Password must be at least 8 characters.</string>
+    <string name="create_account_email_error">Please enter a valid email address.</string>
+    <string name="create_account_password_match_error">Passwords do not match.</string>
 </resources>
