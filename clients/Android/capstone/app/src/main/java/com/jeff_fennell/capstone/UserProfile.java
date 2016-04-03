@@ -31,8 +31,8 @@ public class UserProfile {
         return getString(AUTHENTICATION_TOKEN, activity);
     }
 
-    public static int getUserId(Activity activity) {
-        return getInt(USER_ID, activity);
+    public static long getUserId(Activity activity) {
+        return getLong(USER_ID, activity);
     }
 
     public static boolean hasValidAuthenticationToken(Activity activity) {
@@ -51,8 +51,8 @@ public class UserProfile {
         getEditor(activity).putString(AUTHENTICATION_TOKEN, token).commit();
     }
 
-    public static void saveUserId(int userId, Activity activity) {
-        getEditor(activity).putInt(USER_ID, userId).commit();
+    public static void saveUserId(long userId, Activity activity) {
+        getEditor(activity).putLong(USER_ID, userId).commit();
     }
 
     public static void saveLoginStatus(Activity activity) {
@@ -72,8 +72,8 @@ public class UserProfile {
         return getPreferences(activity).getBoolean(info, false);
     }
 
-    private static int getInt(String info, Activity activity) {
-        return getPreferences(activity).getInt(info, 0);
+    private static long getLong(String info, Activity activity) {
+        return getPreferences(activity).getLong(info, 0);
     }
 
     private static SharedPreferences getPreferences(Activity activity) {
