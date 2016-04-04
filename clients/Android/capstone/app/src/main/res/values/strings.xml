@@ -48,4 +48,5 @@
     <string name="create_account_password_error">Password must be at least 8 characters.</string>
     <string name="create_account_email_error">Please enter a valid email address.</string>
     <string name="create_account_password_match_error">Passwords do not match.</string>
+    <string name="title_activity_camera">Camera</string>
 </resources>

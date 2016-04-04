@@ -165,7 +165,7 @@ public class CreateAccount extends Activity {
     }
 
     private void launchCamera() {
-        Intent camera = new Intent(this, Camera.class);
+        Intent camera = new Intent(this, CameraActivity.class);
         startActivity(camera);
     }
 }

@@ -1,8 +1,3 @@
-package com.jeff_fennell.capstone;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.TextureView;
 /*
  * Copyright 2014 The Android Open Source Project
  *
@@ -19,6 +14,11 @@ import android.view.TextureView;
  * limitations under the License.
  */
 
+package com.jeff_fennell.capstone;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.TextureView;
 
 /**
  * A {@link TextureView} that can be adjusted to a specified aspect ratio.
