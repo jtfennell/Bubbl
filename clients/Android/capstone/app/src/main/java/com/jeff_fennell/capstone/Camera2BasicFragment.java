@@ -946,6 +946,7 @@ public class Camera2BasicFragment extends Fragment
     private void flipCamera() {
         Context context = getActivity().getApplicationContext();
         CharSequence text = "Camera Flip!";
+
         int duration = Toast.LENGTH_SHORT;
 
         Toast toast = Toast.makeText(context, text, duration);
