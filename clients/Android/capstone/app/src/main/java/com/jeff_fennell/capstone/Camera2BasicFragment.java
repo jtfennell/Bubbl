@@ -54,7 +54,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -134,6 +133,7 @@ public class Camera2BasicFragment extends Fragment
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
             openCamera(width, height);
+            attachDoubleClickListener();
         }
 
         @Override
@@ -941,5 +941,23 @@ public class Camera2BasicFragment extends Fragment
                     .create();
         }
 
+    }
+
+    private void flipCamera() {
+        Context context = getActivity().getApplicationContext();
+        CharSequence text = "Hello toast!";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    private void attachDoubleClickListener() {
+        mTextureView.setOnClickListener(new CameraClickListener() {
+            @Override
+            public void onDoubleClick(View v) {
+                flipCamera();
+            }
+        });
     }
 }

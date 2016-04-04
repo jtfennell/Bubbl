@@ -17,9 +17,12 @@
 package com.jeff_fennell.capstone;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class CameraActivity extends Activity {
 
@@ -36,6 +39,7 @@ public class CameraActivity extends Activity {
                     .replace(R.id.container, Camera2BasicFragment.newInstance())
                     .commit();
         }
+
     }
 
     @Override
