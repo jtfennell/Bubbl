@@ -1,4 +1,4 @@
-# Social Camera Application
+# Bubbl
 <h3>Description</h3>
   <p> 
     This application will be an Android application meant to replace the native camera app, that automates the process of sharing photos with friends and family. In order to share photos with friends and family, the process traditionally takes multiple different applications: a photo camera application, a gallery application, and a messaging application. The user must individually select photos and send them to the desired users. This is not a hard task, but can easily become repetitive and take considerably longer when sending multiple photos at once. Limits on the number of photos that can be attached to a single message may even further prolong the process. The purpose of this app is to combine each of these three different applications into one; it will allow users to select who they share photos with at picture-taking time, and automatically send the photos to those users in the background, liberating users of the task of manually sharing the photos.
