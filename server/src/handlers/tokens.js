@@ -20,22 +20,28 @@ var tokens = {
             var userId    = result.rows[0].user_id;
             var email     = result.rows[0].email;
             var username  = result.rows[0].username;
+            var imageId   = result.rows[0].image_id;
 
             var tokenPayload = {
                 firstName: firstName,
                 lastName : lastName,
                 userId   : userId,
                 email    : email,
-                username : username
+                username : username,
+                imageId  : imageId
             };
 
             var token = jwt.encode(tokenPayload, secretKey);
         
             res.status(201).json({
                 "token":token,
-                "userId": userId, 
-                "firstName":firstName,
-                "lastName": lastName
+                "user": {
+                    "userId": userId, 
+                    "firstName":firstName,
+                    "lastName": lastName,
+                    "email":email,
+                    "username":username
+                }
             })
         });   
     }

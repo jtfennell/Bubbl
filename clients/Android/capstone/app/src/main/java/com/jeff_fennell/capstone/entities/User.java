@@ -9,6 +9,7 @@ public class User implements Serializable {
     private String lastName;
     private String password;
     private String email;
+    private String imageId;
 
     public User() {
 
@@ -81,4 +82,11 @@ public class User implements Serializable {
         return this;
     }
 
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
 }
