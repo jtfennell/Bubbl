@@ -29,3 +29,11 @@ CREATE TABLE IF NOT EXISTS user_invited_to_group (
     user_id bigint NOT NULL references users,
     group_id bigint NOT NULL references groups
 );
+
+INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', 'password', 'Jeff', 'Fennell');
+INSERT INTO users(username, email, password, first_name, last_name) values('SomeDude', 'fake123@email.com', 'password', 'The', 'Dude');
+
+INSERT INTO groups(name, created_on, admin) values ('The best group', 1459821220, 1);
+
+INSERT INTO group_contains_user (group_id, user_id) values(1,1);
+INSERT INTO group_contains_user (group_id, user_id) values(1,2);
