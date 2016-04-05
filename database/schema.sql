@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS users (
     email      text NOT NULL,
     password   text NOT NULL,
     first_name text NOT NULL,
-    last_name  text NOT NULL
+    last_name  text NOT NULL,
+    image_id bigint REFERENCES images
 );
 
 CREATE TABLE IF NOT EXISTS groups (
@@ -35,12 +36,6 @@ CREATE TABLE IF NOT EXISTS images (
     url           text      NOT NULL,
     uploaded_by   bigint    NOT NULL REFERENCES users,
     date_uploaded bigint
-);
-
-CREATE TABLE IF NOT EXISTS user_picks_profile_image (
-    user_id  bigint NOT NULL REFERENCES users,
-    image_id bigint NOT NULL REFERENCES images ON DELETE CASCADE,
-    PRIMARY KEY (user_id, image_id)
 );
 
 CREATE TABLE IF NOT EXISTS group_contains_image (
