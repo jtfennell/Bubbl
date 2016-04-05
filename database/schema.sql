@@ -2,6 +2,12 @@
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+CREATE TABLE IF NOT EXISTS images (
+    image_id      bigserial PRIMARY KEY,
+    url           text      NOT NULL,
+    date_uploaded bigint
+);
+
 CREATE TABLE IF NOT EXISTS users (
     user_id    bigserial PRIMARY KEY ,
     username   text UNIQUE NOT NULL,
@@ -31,17 +37,15 @@ CREATE TABLE IF NOT EXISTS user_invited_to_group (
     group_id bigint NOT NULL references groups
 );
 
-CREATE TABLE IF NOT EXISTS images (
-    image_id      bigserial PRIMARY KEY,
-    url           text      NOT NULL,
-    uploaded_by   bigint    NOT NULL REFERENCES users,
-    date_uploaded bigint
-);
-
 CREATE TABLE IF NOT EXISTS group_contains_image (
     group_id bigint NOT NULL REFERENCES groups,
     image_id bigint NOT NULL REFERENCES images ON DELETE CASCADE,
     PRIMARY KEY (group_id, image_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_uploads_image (
+    user_id bigint NOT NULL REFERENCES users,
+    image_id bigint NOT NULL REFERENCES images
 );
 
 INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', 'password', 'Jeff', 'Fennell');
