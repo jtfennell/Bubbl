@@ -52,9 +52,11 @@ INSERT INTO users(username, email, password, first_name, last_name) values('jeff
 INSERT INTO users(username, email, password, first_name, last_name) values('SomeDude', 'fake123@email.com', 'password', 'The', 'Dude');
 
 INSERT INTO groups(name, created_on, admin) values ('The best group', 1459821220, 1);
+INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);
 
 INSERT INTO group_contains_user (group_id, user_id) values(1,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,2);
+INSERT INTO group_contains_user (group_id, user_id) values(2,2);
 
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/w_133,h_133,c_thumb,g_face,r_max/bike.jpg',1459827876);
 INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
@@ -66,3 +68,4 @@ INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/im
 
 INSERT INTO group_contains_image(group_id, image_id) values(1,2);
 INSERT INTO group_contains_image(group_id, image_id) values(1,3);
+INSERT INTO group_contains_image(group_id, image_id) values(2,4);

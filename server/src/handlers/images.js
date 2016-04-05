@@ -59,7 +59,6 @@ var images = {
                         );
                     }
                 );
-                
             }
         }
 
@@ -70,7 +69,63 @@ var images = {
     },
 
     add: (req, res) => {
+        var typeOfImage = req.query.type;
+        var groupId = req.query.groupId;
+        var imageUrl = req.query.imageUrl;
 
+        if (!(typeOfImage && imageUrl)) {
+            return res.status(400).json({"message":"bad request"});
+        };
+
+         var addImage = {
+            'profile': () => {
+                var imageId;
+                database.query(
+                    `INSERT INTO images(url, date_uploaded)
+                    VALUES ('${imageUrl}', '${Date.now()}')
+                    RETURNING image_id`,
+                    (err, result) => {
+                        if (err) {
+                            console.log('error # 1');
+                            console.log(err);
+                            return res.status(500).json("internal server error");
+                        }
+                        imageId = result.rows[0].image_id;
+
+                        database.query(
+                            `UPDATE users 
+                            SET image_id='${imageId}'
+                            WHERE user_id = '${req.authenticatedUser.userId}'`,
+                            (err, result) => {
+                                if (err) {
+                                    console.log('error # 2');
+                                    console.log(err)
+                                    return res.status(500).json("internal server error");
+                                }
+                                database.query(
+                                    `INSERT INTO user_uploads_image (user_id, image_id)
+                                    VALUES ('${req.authenticatedUser.userId}', '${imageId}')`,
+                                    (err, result) => {
+                                        console.log('error # 3');
+                                        console.log(err)
+                                        return res.status(204).json({"message":"profile picture saved"});
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            }, 
+            'group': () => {
+                if (!groupId) {
+                    return res.status(400).json({"message":"group required"});
+                };                
+            }
+        }
+        if(!addImage[typeOfImage]) {
+            return res.status(400).json("bad type");
+        }
+        addImage[typeOfImage]()
     },
 
     delete: (req, res) => {
