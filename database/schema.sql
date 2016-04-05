@@ -55,3 +55,14 @@ INSERT INTO groups(name, created_on, admin) values ('The best group', 1459821220
 
 INSERT INTO group_contains_user (group_id, user_id) values(1,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,2);
+
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/w_133,h_133,c_thumb,g_face,r_max/bike.jpg',1459827876);
+INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
+UPDATE users SET image_id='1' where user_id='1';
+
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample.jpg', 1459821220);
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample2.jpg', 1459821220);
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample3.jpg', 1459821220);
+
+INSERT INTO group_contains_image(group_id, image_id) values(1,2);
+INSERT INTO group_contains_image(group_id, image_id) values(1,3);
