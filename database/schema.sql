@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS user_uploads_image (
     image_id bigint NOT NULL REFERENCES images
 );
 
-INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', 'password', 'Jeff', 'Fennell');
-INSERT INTO users(username, email, password, first_name, last_name) values('SomeDude', 'fake123@email.com', 'password', 'The', 'Dude');
+INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', crypt('password',gen_salt('bf')), 'Jeff', 'Fennell');
+INSERT INTO users(username, email, password, first_name, last_name) values('SomeDude', 'fake123@email.com', crypt('password',gen_salt('bf')), 'The', 'Dude');
 
 INSERT INTO groups(name, created_on, admin) values ('The best group', 1459821220, 1);
 INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);
