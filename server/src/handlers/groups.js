@@ -9,7 +9,7 @@ var groups = {
                 if (err) {
                     return res.status(500).json({"message":"there was an internal service error."});
                 };
-                return res.status(200).json({"groups": result.rows});
+                return res.status(200).json(result.rows);
             }
         );
     },
