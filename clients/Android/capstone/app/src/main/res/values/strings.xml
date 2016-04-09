@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Capstone</string>
+    <string name="app_name">Bubbl</string>
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
@@ -49,4 +49,9 @@
     <string name="create_account_email_error">Please enter a valid email address.</string>
     <string name="create_account_password_match_error">Passwords do not match.</string>
     <string name="title_activity_camera">Camera</string>
+    <string name="alert_dialog_ok">Ok</string>
+    <string name="group_dialog_title">Select group</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

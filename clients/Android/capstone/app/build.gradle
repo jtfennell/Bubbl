@@ -15,7 +15,9 @@ android {
         debug {
 //            buildConfigField "String", "API_BASE_URL", "\"http://localhost:8000/api/v1/\""
 //            buildConfigField "String", "API_BASE_URL", "\"http://10.0.1.219:8000/api/v1/\""
-            buildConfigField "String", "API_BASE_URL", "\"http://192.168.1.92:8080/api/v1/\""
+//            buildConfigField "String", "API_BASE_URL", "\"http://10.0.1.232:8080/api/v1/\""
+//            buildConfigField "String", "API_BASE_URL", "\"http://10.27.175.157:8080/api/v1/\""
+              buildConfigField "String", "API_BASE_URL", "\"http://192.168.1.92:8080/api/v1/\""
         }
         release {
             minifyEnabled false
@@ -44,4 +46,5 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.android.support:design:22.2.1'
+    compile 'com.txusballesteros:bubbles:1.2.1'
 }

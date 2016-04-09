@@ -75,6 +75,8 @@ public class Camera2BasicFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
+//    private static final long groupToSendTo;
+//    private static final long albumToPostTo;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);

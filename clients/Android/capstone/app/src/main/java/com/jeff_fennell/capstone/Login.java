@@ -132,5 +132,7 @@ public class Login extends Activity {
         UserProfile.saveFirstName(user.getFirstName(), this);
         UserProfile.saveLastName(user.getLastName(), this);
         UserProfile.saveLoginStatus(this);
+        //TODO
+//        UserProfile.saveUserPhoto(user.getPhotourl(),this);
     }
 }

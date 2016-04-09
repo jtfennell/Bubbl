@@ -17,12 +17,19 @@
 package com.jeff_fennell.capstone;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.DialogFragment;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
+
+import com.jeff_fennell.capstone.entities.Group;
+import com.jeff_fennell.capstone.entities.User;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CameraActivity extends Activity {
 
@@ -39,12 +46,22 @@ public class CameraActivity extends Activity {
                     .replace(R.id.container, Camera2BasicFragment.newInstance())
                     .commit();
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+       promptUserForGroup();
     }
 
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
+    }
+
+    private void promptUserForGroup() {
+        DialogFragment newFragment = new SelectGroupDialog();
+        newFragment.show(getFragmentManager(), "selectGroup");
     }
 
 }

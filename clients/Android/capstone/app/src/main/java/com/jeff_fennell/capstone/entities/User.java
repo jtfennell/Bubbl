@@ -1,14 +1,20 @@
 package com.jeff_fennell.capstone.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
     private String username;
+    @SerializedName("user_id")
     private Long userId;
+    @SerializedName("first_name")
     private String firstName;
+    @SerializedName("last_name")
     private String lastName;
     private String password;
     private String email;
+    @SerializedName("image_id")
     private String imageId;
 
     public User() {

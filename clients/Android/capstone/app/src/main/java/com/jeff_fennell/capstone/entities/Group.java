@@ -1,11 +1,17 @@
 package com.jeff_fennell.capstone.entities;
 
-public class Group {
+import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+public class Group {
+    @SerializedName("group_id")
     private Long groupId;
     private String name;
+    @SerializedName("created_on")
     private Long createdOnTimestamp;
     private Long admin;
+    private List members;
 
     public Long getGroupId() {
         return groupId;
@@ -37,5 +43,13 @@ public class Group {
 
     public void setAdmin(Long admin) {
         this.admin = admin;
+    }
+
+    public List getMembers() {
+        return members;
+    }
+
+    public void setMembers(List members) {
+        this.members = members;
     }
 }

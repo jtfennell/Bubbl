@@ -23,7 +23,7 @@ public interface BubblService {
     Call<LoginResult> login (@Body User user);
 
     @GET("groups")
-    Call<List<Group>> getGroups(@Body User user, @Header("x-access-token") String token);
+    Call<List<Group>> getGroups(@Header("x-access-token") String token);
 
     @POST("groups")
     Call<Group> createNewGroup(@Body Group group, @Header("x-access-token") String token);
