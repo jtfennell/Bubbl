@@ -21,17 +21,9 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-
 import com.jeff_fennell.capstone.entities.Group;
-import com.jeff_fennell.capstone.entities.User;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class CameraActivity extends Activity {
+public class CameraActivity extends Activity implements SelectGroupDialog.OnGroupSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +35,7 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.activity_camera);
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
-                    .replace(R.id.container, Camera2BasicFragment.newInstance())
+                    .replace(R.id.container, Camera2BasicFragment.newInstance(),Camera2BasicFragment.FRAGMENT_TAG)
                     .commit();
         }
     }
@@ -61,7 +53,12 @@ public class CameraActivity extends Activity {
 
     private void promptUserForGroup() {
         DialogFragment newFragment = new SelectGroupDialog();
-        newFragment.show(getFragmentManager(), "selectGroup");
+        newFragment.show(getFragmentManager(), SelectGroupDialog.FRAGMENT_TAG);
     }
 
+    @Override
+    public void updateGroupSelected(Group groupSelected) {
+        Camera2BasicFragment cameraFragment = (Camera2BasicFragment)getFragmentManager().findFragmentByTag(Camera2BasicFragment.FRAGMENT_TAG);
+        cameraFragment.updateGroupInfo(groupSelected);
+    }
 }

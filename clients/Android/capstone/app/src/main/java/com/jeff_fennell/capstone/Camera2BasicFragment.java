@@ -53,7 +53,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.jeff_fennell.capstone.entities.Group;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,7 +72,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener {
-
+    public static String FRAGMENT_TAG = "cameraFragment";
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
@@ -962,5 +966,18 @@ public class Camera2BasicFragment extends Fragment
                 flipCamera();
             }
         });
+    }
+
+    public void updateGroupInfo(Group group) {
+       TextView groupSelected = (TextView) getView().findViewById(R.id.camera_group_selected);
+        groupSelected.setText(group.getName());
+        removeGroupFragment();
+    }
+
+    public void removeGroupFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(SelectGroupDialog.FRAGMENT_TAG);
+        if(fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 }

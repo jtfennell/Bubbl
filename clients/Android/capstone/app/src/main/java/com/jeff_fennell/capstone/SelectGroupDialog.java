@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SelectGroupDialog extends DialogFragment {
     private List<Group> groupsWithMembers;
+    public static String FRAGMENT_TAG = "selectGroup";
 
     Retrofit retrofit = new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
@@ -35,6 +37,12 @@ public class SelectGroupDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        bindOnClickListener();
     }
 
     @Override
@@ -84,19 +92,20 @@ public class SelectGroupDialog extends DialogFragment {
             for (User member : (List<User>)group.getMembers()) {
                 membersInGroup += member.getFirstName() + ", ";
             }
-            String trimmedMembers = membersInGroup.trim();
+
             membersInGroup = membersInGroup.trim().substring(0, membersInGroup.length() - 2);
 
             ((TextView)groupView.findViewById(R.id.group_members)).setText(membersInGroup);
             return groupView;
         }
+
     }
 
     class DownloadGroupsAndMembersTask extends AsyncTask<Void, Void, List<Group>> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //start spinner on dialog fragment
+            //TODO - start spinner on dialog fragment
         }
 
         @Override
@@ -132,5 +141,20 @@ public class SelectGroupDialog extends DialogFragment {
                 }
             }
         }
+    }
+
+    public interface OnGroupSelectedListener {
+        void updateGroupSelected(Group group);
+    }
+
+    private void bindOnClickListener() {
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((SelectGroupDialog.OnGroupSelectedListener) getActivity()).updateGroupSelected((Group) parent.getItemAtPosition(position));
+            }
+        };
+
+        ((ListView)getView().findViewById(R.id.users_groups)).setOnItemClickListener(listener);
     }
 }
