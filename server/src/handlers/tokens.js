@@ -7,10 +7,12 @@ var tokens = {
         if (!(req.body.username && req.body.password)) {
             return res.status(400).json({"message":"username and password required"});
         }
+        console.log(req.body.username)
+        console.log(req.body.password)
 
         database.query(`SELECT * FROM users WHERE username='${req.body.username}' AND password=crypt('${req.body.password}', password)`, (err, result) => {
             if (err) {return res.status(500).json('there was an internal server error')};
-            
+            console.log(result.rows)
             if (!result.rows[0]) {
                 return res.status(404).json({'message':'username or password incorrect'});
             };

@@ -24,7 +24,8 @@
 		"dotenv": "^1.2.0",
 		"pg": "^4.4.2",
 		"body-parser": "^1.14.2",
-		"jwt-simple": "^0.4.1"
+		"jwt-simple": "^0.4.1",
+		"async":"latest"
 	},
 	"scripts": {
 		"start": "node server/src/server.js",

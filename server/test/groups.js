@@ -473,7 +473,6 @@ describe('/api/v1/groups', function() {
                                 function(err, result) { 
                                     request
                                     .delete('/api/v1/groups/1')
-                                    .set('x-access-token','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMiIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6ImplZmZUaGFCZXN0In0.tjnyms0-7_Gg6ytGXO5g0CPL__szHoT8jQWZQLEd-34')
                                     .end((err, res) => {
                                         database.query(`SELECT * FROM GROUPS`, function(err, result) {
                                             should.not.exist(err);

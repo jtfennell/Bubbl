@@ -31,7 +31,7 @@ var members = {
                             return res.status(500).json({"message":"there was an internal server error"});
                         };
                         
-                        return res.status(200).json({"members":result.rows});
+                        return res.status(200).json(result.rows);
                     }
                 )
             }

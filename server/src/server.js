@@ -1,4 +1,4 @@
-require('dotenv').load();
+  require('dotenv').load();
 
 var express     = require('express');
 var morgan      = require('morgan');
@@ -12,15 +12,16 @@ var tokens      = require('./handlers/tokens');
 var groups      = require('./handlers/groups');
 var invites     = require('./handlers/invites');
 var members     = require('./handlers/members');
+var images      = require('./handlers/images');
 //var albums      = require('./handlers/albums');
 
 var requireAccessToken = require('./middleware/requireAccessToken');
 
 var app = express();
 
-var privateKey  = fs.readFileSync(`${__dirname}../../certs/server.key`);
-var certificate = fs.readFileSync(`${__dirname}../../certs/server.crt`);
-var credentials = {key:privateKey, cert:certificate};
+// var privateKey  = fs.readFileSync(`${__dirname}../../certs/server.key`);
+// var certificate = fs.readFileSync(`${__dirname}../../certs/server.crt`);
+// var credentials = {key:privateKey, cert:certificate};
 
 var HTTP_PORT     = process.env.HTTP_PORT      || 8080;
 var HTTPS_PORT    = process.env.HTTPS_PORT     || 443;
@@ -57,21 +58,19 @@ app.post('/api/v1/members',             [requireAccessToken, members.invite]);
 app.delete('/api/v1/members/:memberId', [requireAccessToken, members.removeFromGroup]);
 app.use('/api/v1/members',              methodNotAllowed);
 
-//app.get('/api/v1/images', [requireAccessToken])
-//app.post('/api/v1/images', [requireAccessToken])
-//app.delete('/api/v1/images/:imageId', [requireAccessToken])
+app.get('/api/v1/images', [requireAccessToken, images.getUrls]);
+// type=profile | group&groupId=__ | album&albumId=__
+app.post('/api/v1/images', [requireAccessToken, images.add]);
+// type=profile | group&groupId=__ | album&albumId=__
+app.delete('/api/v1/images/:imageId', [requireAccessToken, images.delete]);
+app.use('api/v1/images', methodNotAllowed);
 
 //app.get('/api/v1/albums', [requireAccessToken, albums.getByGroup])
-//app.post('/api/v1/albums', [requireAccessToken, albums.create])
+//app.post ('/api/v1/albums', [requireAccessToken, albums.create])
 //app.delete('/api/v1/albums', [requireAccessToken, albums.delete])
 
-//app.get('/api/v1/groups/:groupId/images', [requireAccessToken])
-//app.post('/api/v1/groups/:groupId/images', [requireAccessToken])
-//app.delete('/api/v1/groups/:groupId/images/:imageId', [requireAccessToken])
-
-
 http.createServer(app).listen(HTTP_PORT);
-https.createServer(credentials, app).listen(HTTPS_PORT);
+// https.createServer(credentials, app).listen(HTTPS_PORT);
 
 if (process.env.NODE_ENV !== 'test') {
 	console.log(`http server listening on port ${HTTP_PORT}`);

@@ -151,19 +151,19 @@ var createUserWithOneInvite = function(callback) {
     );
 }
 
-describe('api/v1/groups/invites', function() {
+describe('api/v1/invites', function() {
     context('GET', function() {
         context('when request is invalid', function() {
             context('when no access token provided', function() {
                 it('returns 401 status code', function(done) {
                     request
-                    .get('/api/v1/groups/invites')
+                    .get('/api/v1/invites')
                     .expect(401, done);
                 });
 
                 it('does not return the user\'s current invites', function(done) {
                     request
-                    .get('/api/v1/groups/invites')
+                    .get('/api/v1/invites')
                     .end(function(err, res){
                         should.not.exist(err);
                         should.not.exist(res.body.invites);
@@ -176,7 +176,7 @@ describe('api/v1/groups/invites', function() {
         context('when request is valid', function() {
             it('returns 200 status code', function(done) {
                 request
-                .get('/api/v1/groups/invites')
+                .get('/api/v1/invites')
                 .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                 .expect(200, done);
             });
@@ -184,7 +184,7 @@ describe('api/v1/groups/invites', function() {
             it('returns the invites a user has been sent', function(done) {
                 createUserWithOneInvite(function() {
                     request
-                    .get('/api/v1/groups/invites')
+                    .get('/api/v1/invites')
                     .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                     .end(function(err, res) {
                         should.not.exist(err);
@@ -202,14 +202,14 @@ describe('api/v1/groups/invites', function() {
             context('when no access token provided', function() {
                 it('returns 401 status code', function(done) {
                     request
-                    .post('/api/v1/groups/invites')
+                    .post('/api/v1/invites')
                     .expect(401, done)
                 });
 
                 it('does not accept the user\'s invite', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .post('/api/v1/groups/invites')
+                        .post('/api/v1/invites')
                         .end(function(err, res) {
                             should.not.exist(err);
                             database.query('SELECT * FROM user_invited_to_group', function(err, result) {
@@ -230,7 +230,7 @@ describe('api/v1/groups/invites', function() {
             context('when group id not specified', function() {
                 it('returns 400 status code', function(done) {
                     request
-                    .post('/api/v1/groups/invites')
+                    .post('/api/v1/invites')
                     .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                     .expect(400, done)
                 });
@@ -238,7 +238,7 @@ describe('api/v1/groups/invites', function() {
                 it('does not accept the user\'s invite', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .post('/api/v1/groups/invites')
+                        .post('/api/v1/invites')
                         .end(function(err, res) {
                             should.not.exist(err);
                             database.query('SELECT * FROM user_invited_to_group', function(err, result) {
@@ -262,7 +262,7 @@ describe('api/v1/groups/invites', function() {
                 it('returns 404 status code', function(done) {
                     createUserNoInvite(function() {
                         request
-                        .post('/api/v1/groups/invites')
+                        .post('/api/v1/invites')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                         .send({groupId:1})
                         .expect(404, done);
@@ -274,7 +274,7 @@ describe('api/v1/groups/invites', function() {
                 it('returns 204 status code', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .post('/api/v1/groups/invites')
+                        .post('/api/v1/invites')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                         .send({groupId:1})
                         .expect(204, done);
@@ -284,7 +284,7 @@ describe('api/v1/groups/invites', function() {
                 it('adds user to the invite group', function(done) {
                     createUserWithOneInvite(function() {
                        request
-                       .post('/api/v1/groups/invites')
+                       .post('/api/v1/invites')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                        .send({groupId:1})
                        .end(function(err, res) {
@@ -301,7 +301,7 @@ describe('api/v1/groups/invites', function() {
                 it('deletes the invite', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .post('/api/v1/groups/invites')
+                        .post('/api/v1/invites')
                         .end(function(err, result) {
                             database.query('SELECT * FROM user_invited_to_group where user_id=2', function(err, result) {
                                 should.not.exist(err);
@@ -320,14 +320,14 @@ describe('api/v1/groups/invites', function() {
             context('When no access token provided', function() {
                 it('returns 401 status code', function(done) {
                     request
-                    .delete('/api/v1/groups/invites/1')
+                    .delete('/api/v1/invites/1')
                     .expect(401, done);
                 });
 
                 it('does not delete the invite', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .delete('/api/v1/groups/invites/1')
+                        .delete('/api/v1/invites/1')
                         .end(function(err, res) {
                             database.query('SELECT * FROM user_invited_to_group', function(err, result) {
                                 should.not.exist(err);
@@ -345,7 +345,7 @@ describe('api/v1/groups/invites', function() {
                 it('returns 404 status code', function(done) {
                     createUserNoInvite(function() {
                         request
-                        .delete('/api/v1/groups/invites/1')
+                        .delete('/api/v1/invites/1')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                         .expect(404, done);
                     });
@@ -356,7 +356,7 @@ describe('api/v1/groups/invites', function() {
                 it('returns a 204 status code', function(done) {
                 createUserWithOneInvite(function() {
                     request
-                        .delete('/api/v1/groups/invites/1')
+                        .delete('/api/v1/invites/1')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                         .expect(204, done);
                      });
@@ -365,7 +365,7 @@ describe('api/v1/groups/invites', function() {
                 it('deletes the user invite', function(done) {
                     createUserWithOneInvite(function() {
                         request
-                        .delete('/api/v1/groups/invites/1')
+                        .delete('/api/v1/invites/1')
                         .set('x-access-token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdE5hbWUiOiJKZWZmIiwibGFzdE5hbWUiOiJGZW5uZWxsIiwidXNlcklkIjoiMSIsImVtYWlsIjoiZmFrZUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InRoYUJlc3RVc2VyIn0.kUSY4d4IMZ9nV-Zc-Cx2GSYIgqLTAx8MZCW-lgcxJm8')
                         .end(function(err, res) {
                             should.not.exist(err);

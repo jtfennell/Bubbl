@@ -49,14 +49,20 @@ CREATE TABLE IF NOT EXISTS user_uploads_image (
 );
 
 INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', crypt('password',gen_salt('bf')), 'Jeff', 'Fennell');
-INSERT INTO users(username, email, password, first_name, last_name) values('SomeDude', 'fake123@email.com', crypt('password',gen_salt('bf')), 'The', 'Dude');
+INSERT INTO users(username, email, password, first_name, last_name) values('katdaddy', 'fake123@email.com', crypt('password',gen_salt('bf')), 'Kat', 'Embisan');
+INSERT INTO users(username, email, password, first_name, last_name) values('AnotherDude', 'fake123@email.com', crypt('password',gen_salt('bf')), 'Josh', 'Fennell ');
 
-INSERT INTO groups(name, created_on, admin) values ('The best group', 1459821220, 1);
+INSERT INTO groups(name, created_on, admin) values ('Bae', 1459821220, 1);
 INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);
+INSERT INTO groups(name, created_on, admin) values ('Bae and Bro', 1459821220, 1);
 
 INSERT INTO group_contains_user (group_id, user_id) values(1,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,2);
 INSERT INTO group_contains_user (group_id, user_id) values(2,2);
+INSERT INTO group_contains_user (group_id, user_id) values(3,1);
+INSERT INTO group_contains_user (group_id, user_id) values(3,2);
+INSERT INTO group_contains_user (group_id, user_id) values(3,3);
+
 
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/w_133,h_133,c_thumb,g_face,r_max/bike.jpg',1459827876);
 INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
