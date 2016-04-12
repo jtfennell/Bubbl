@@ -19,6 +19,7 @@ package com.jeff_fennell.capstone;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import com.jeff_fennell.capstone.entities.Group;
@@ -43,7 +44,7 @@ public class CameraActivity extends Activity implements SelectGroupDialog.OnGrou
     @Override
     protected void onStart() {
         super.onStart();
-       promptUserForGroup();
+       promptUserForGroup(null);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class CameraActivity extends Activity implements SelectGroupDialog.OnGrou
         moveTaskToBack(true);
     }
 
-    private void promptUserForGroup() {
+    public void promptUserForGroup(View view) {
         DialogFragment newFragment = new SelectGroupDialog();
         newFragment.show(getFragmentManager(), SelectGroupDialog.FRAGMENT_TAG);
     }

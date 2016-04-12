@@ -1,5 +1,6 @@
 package com.jeff_fennell.capstone;
 
+import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.LoginResult;
 import com.jeff_fennell.capstone.entities.Group;
 import com.jeff_fennell.capstone.entities.Invite;
@@ -48,4 +49,7 @@ public interface BubblService {
 
     @DELETE("members/{memberId}")
     Call<Void> deleteMemberFromGroup(@Path("memberId") long memberId, @Query("groupId")long groupId, @Header("x-access-token") String token);
+
+    @GET("images")
+    Call<List<Image>> getImages(@Query("type") String type, @Query("groupId")long groupId, @Header("x-access-token") String token);
 }

@@ -23,6 +23,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
@@ -53,6 +54,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -424,6 +426,7 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+        setUpGroupLongClick();
     }
 
     @Override
@@ -979,5 +982,21 @@ public class Camera2BasicFragment extends Fragment
         if(fragment != null) {
             getFragmentManager().beginTransaction().remove(fragment).commit();
         }
+    }
+
+    private void setUpGroupLongClick() {
+        LinearLayout groupView = (LinearLayout)getView().findViewById(R.id.group_container);
+        groupView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                launchGroupsActivity();
+                return true;
+            }
+        });
+    }
+
+    private void launchGroupsActivity() {
+        Intent groupsActivity = new Intent(getActivity(), Groups.class);
+        startActivity(groupsActivity);
     }
 }

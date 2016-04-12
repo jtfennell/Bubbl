@@ -12,6 +12,7 @@ public class Group {
     private Long createdOnTimestamp;
     private Long admin;
     private List members;
+    private String groupImageUrl;
 
     public Long getGroupId() {
         return groupId;
@@ -51,5 +52,13 @@ public class Group {
 
     public void setMembers(List members) {
         this.members = members;
+    }
+
+    public String getGroupImageUrl() {
+        return groupImageUrl;
+    }
+
+    public void setGroupImageUrl(String groupImageUrl) {
+        this.groupImageUrl = groupImageUrl;
     }
 }

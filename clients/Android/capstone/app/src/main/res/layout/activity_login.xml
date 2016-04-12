@@ -29,14 +29,14 @@
             android:hint="@string/login_password_hint"
             android:id="@+id/login_password"/>
     </android.support.design.widget.TextInputLayout>
-    <com.alertdialogpro.material.ButtonCompat
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?attr/borderlessButtonStyle"
         android:hint="@string/login_button"
         android:layout_gravity="center_horizontal"
         android:onClick="validateInputsAndAttemptLogin"/>
-    <com.alertdialogpro.material.ButtonCompat
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="?attr/borderlessButtonStyle"

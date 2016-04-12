@@ -10,7 +10,7 @@ var images = {
         };
 
         var getImages = {
-            'profile': () => {
+            'userProfile': () => {
                 database.query(
                     `SELECT image_id, date_uploaded, url
                     FROM users NATURAL JOIN images
@@ -23,12 +23,11 @@ var images = {
                         if (!result.rows[0]) {
                             return res.status(404).json("no profile picture");
                         }
-                        console.log(JSON.stringify(result.rows[0]));
-                        return res.status(200).json({"images":[result.rows[0]]});
+                        return res.status(200).json(result.rows);
                     }
                 );
             }, 
-            'group': () => {
+            'groupAll': () => {
                 if (!groupId) {
                     return res.status(400).json({"message":"group required"});
                 };
@@ -51,10 +50,38 @@ var images = {
                                     return res.status(500).json("internal server error");
                                 }
 
-                                if (!result.rows[0]) {
-                                    return res.status(404).json("no profile picture");
+                                return res.status(200).json(result.rows);
+                            }
+                        );
+                    }
+                );
+            },
+            'groupProfile': () => {
+                if (!groupId) {
+                    return res.status(400).json({"message":"group required"});
+                };
+                database.query(
+                    `SELECT * 
+                    FROM group_contains_user
+                    WHERE group_id=${groupId}
+                    AND user_id=${req.authenticatedUser.userId}`,
+                    (err, result) => {
+                        if (!result.rows[0]) {
+                            return res.status(403).json({"message":"forbidden"});
+                        };
+
+                        database.query(
+                            `SELECT image_id, date_uploaded, url
+                            FROM groups, images
+                            WHERE group_id=${req.authenticatedUser.userId}
+                            AND groups.group_image_id=images.image_id`
+                            , (err, result) => {
+                                if (err) {
+                                    console.log(err)
+                                    return res.status(500).json("internal server error");
                                 }
-                                return res.status(200).json({"images":[result.rows]});
+
+                                return res.status(200).json(result.rows);
                             }
                         );
                     }

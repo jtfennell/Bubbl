@@ -19,10 +19,8 @@
 
     <com.jeff_fennell.capstone.AutoFitTextureView
         android:id="@+id/texture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,12 +28,16 @@
         android:layout_marginTop="@dimen/abc_button_inset_vertical_material"
         android:background="@android:color/transparent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:id="@+id/imageButton" />
     <LinearLayout
         android:layout_width="wrap_content"
+        android:id="@+id/group_container"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:onClick="promptUserForGroup"
+        android:longClickable="true">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

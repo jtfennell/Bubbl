@@ -3,7 +3,9 @@ var database  = require('../../../database/pg-client.js');
 var groups = {
     getByUser: (req, res) => {
         database.query(
-            `SELECT *FROM groups NATURAL JOIN group_contains_user WHERE user_id=${req.authenticatedUser.userId}`
+            `SELECT group_id, name, created_on, admin, group_image_id
+            FROM groups NATURAL JOIN group_contains_user 
+            WHERE user_id=${req.authenticatedUser.userId}`
             ,
             (err, result) => {
                 if (err) {
