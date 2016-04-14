@@ -1,7 +1,7 @@
 package com.jeff_fennell.capstone;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,12 +9,12 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jeff_fennell.capstone.entities.Group;
@@ -61,7 +61,7 @@ public class Groups extends Activity {
                 for (Group group : groups) {
                     Call getGroupImage = api.getImages(
                         Image.GROUP_PROFILE,
-                        UserProfile.getUserId(activity),
+                        group.getGroupId(),
                         UserProfile.getAuthenticationToken(activity)
                     );
                     List<Image> imageList = (List<Image>)getGroupImage.execute().body();
@@ -89,8 +89,11 @@ public class Groups extends Activity {
         protected void onPostExecute(List<Group> groups) {
             super.onPostExecute(groups);
             //stop spinner
+            GridView groupGrid = (GridView)findViewById(R.id.group_list);
             GroupsAdapter adapter = new GroupsAdapter(groups, activity);
-            ((GridView)findViewById(R.id.group_list)).setAdapter(adapter);
+            groupGrid.setAdapter(adapter);
+            groupGrid.setOnItemClickListener(new GroupClickListener(activity));
+
         }
     }
 
@@ -142,10 +145,31 @@ public class Groups extends Activity {
                                 }
                             });
                 }
+                else {
+                    groupImage.setImageDrawable(getDrawable(R.drawable.ic_people_white_48dp));
+                }
             } else {
                 groupView = (LinearLayout)convertView;
             }
             return groupView;
+        }
+    }
+
+    public class GroupClickListener implements AdapterView.OnItemClickListener {
+        private Activity activity;
+
+        public GroupClickListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Group selectedGroup = (Group)parent.getItemAtPosition(position);
+            Intent groupDetailView = new Intent(activity,GroupDetailView.class);
+            Bundle groupPayload = new Bundle();
+            groupPayload.putSerializable(Group.serializeKey, selectedGroup);
+            groupDetailView.putExtras(groupPayload);
+            startActivity(groupDetailView);
         }
     }
 }

@@ -63,7 +63,7 @@ UPDATE users SET image_id='1' where user_id='1';
 INSERT INTO groups(name, created_on, admin, group_image_id) values ('Bae', 1459821220, 1, 1);
 INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);
 INSERT INTO groups(name, created_on, admin) values ('Bae and Bro', 1459821220, 1); 
-INSERT INTO groups(name, created_on, admin, group_image_id) values ('Squad', 1459821220, 1, 1);
+INSERT INTO groups(name, created_on, admin) values ('Squad', 1459821220, 1);
 
 INSERT INTO group_contains_user (group_id, user_id) values(1,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,2);

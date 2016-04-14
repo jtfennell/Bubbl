@@ -73,7 +73,7 @@ var images = {
                         database.query(
                             `SELECT image_id, date_uploaded, url
                             FROM groups, images
-                            WHERE group_id=${req.authenticatedUser.userId}
+                            WHERE group_id=${groupId}
                             AND groups.group_image_id=images.image_id`
                             , (err, result) => {
                                 if (err) {

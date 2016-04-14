@@ -2,9 +2,10 @@ package com.jeff_fennell.capstone.entities;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Group {
+public class Group implements Serializable {
     @SerializedName("group_id")
     private Long groupId;
     private String name;
@@ -13,6 +14,7 @@ public class Group {
     private Long admin;
     private List members;
     private String groupImageUrl;
+    public static final String serializeKey = "GROUP";
 
     public Long getGroupId() {
         return groupId;
