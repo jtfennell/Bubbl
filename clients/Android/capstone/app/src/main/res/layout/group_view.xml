@@ -14,9 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/group_name"
         android:textSize="23sp"
-        android:gravity="center"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:gravity="center"
+        android:letterSpacing=".1"
+        android:textAllCaps="true"/>
 </LinearLayout>

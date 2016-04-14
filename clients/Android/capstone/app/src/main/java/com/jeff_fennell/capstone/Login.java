@@ -21,7 +21,7 @@ public class Login extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        UserProfile.logout(this);
+        UserProfile.logout(this);
         if (UserProfile.isLoggedIn(this)) {
             launchCamera();
         }

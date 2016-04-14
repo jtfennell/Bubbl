@@ -38,11 +38,12 @@ var tokens = {
             res.status(201).json({
                 "token":token,
                 "user": {
-                    "userId": userId, 
-                    "firstName":firstName,
-                    "lastName": lastName,
+                    "user_id": userId, 
+                    "first_name":firstName,
+                    "last_name": lastName,
                     "email":email,
-                    "username":username
+                    "username":username,
+                    "image_id": imageId
                 }
             })
         });   
