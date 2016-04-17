@@ -16,6 +16,10 @@ public class Group implements Serializable {
     private String groupImageUrl;
     public static final String serializeKey = "GROUP";
 
+    public Group(String name) {
+        this.name = name;
+    }
+
     public Long getGroupId() {
         return groupId;
     }

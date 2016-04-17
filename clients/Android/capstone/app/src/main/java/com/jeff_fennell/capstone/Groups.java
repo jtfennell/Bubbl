@@ -1,6 +1,7 @@
 package com.jeff_fennell.capstone;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -10,7 +11,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,10 +23,12 @@ import com.jeff_fennell.capstone.entities.Image;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Groups extends Activity {
+public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener {
     private BubblService api;
 
     @Override
@@ -43,6 +46,33 @@ public class Groups extends Activity {
 
     private void getAndPopulateGroups() {
         new GetGroupsWithImages(this).execute();
+    }
+
+    public void createGroup(String groupName) {
+        Retrofit retrofit = new Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BuildConfig.API_BASE_URL)
+            .build();
+
+        BubblService api = retrofit.create(BubblService.class);
+
+        Call createNewGroup = api.createNewGroup(new Group(groupName), UserProfile.getAuthenticationToken(this));
+        createNewGroup.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                    Group newlyCreatedGroup = (Group)response.body();
+                    ArrayAdapter<Group> groupAdapter = (ArrayAdapter)((GridView) findViewById(R.id.group_list)).getAdapter();
+                    groupAdapter.add(newlyCreatedGroup);
+                    groupAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
     class GetGroupsWithImages extends AsyncTask<Void, Void, List<Group>>{
@@ -97,11 +127,12 @@ public class Groups extends Activity {
         }
     }
 
-    public class GroupsAdapter extends BaseAdapter {
+    public class GroupsAdapter extends ArrayAdapter<Group> {
         private List<Group> groups;
         private Activity activity;
 
         public GroupsAdapter(List<Group> groups, Activity activity) {
+            super(activity,0);
             this.activity = activity;
             this.groups = groups;
         }
@@ -171,5 +202,10 @@ public class Groups extends Activity {
             groupDetailView.putExtras(groupPayload);
             startActivity(groupDetailView);
         }
+    }
+
+    public void launchCreateGroupDialog(View view) {
+        DialogFragment newFragment = new CreateGroupFragment();
+        newFragment.show(getFragmentManager(), SelectGroupDialog.FRAGMENT_TAG);
     }
 }

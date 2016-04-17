@@ -89,11 +89,15 @@ public class SelectGroupDialog extends DialogFragment {
             ((TextView)groupView.findViewById(R.id.group_name)).setText(group.getName());
 
             String membersInGroup = "";
-            for (User member : (List<User>)group.getMembers()) {
-                membersInGroup += member.getFirstName() + ", ";
+            List members =(List<User>)group.getMembers();
+            if (members.size() >= 1) {
+                for (User member : (List<User>) group.getMembers()) {
+                    membersInGroup += member.getFirstName() + ", ";
+                }
+                membersInGroup = membersInGroup.trim().substring(0, membersInGroup.lastIndexOf(","));
+            } else {
+                membersInGroup = getString(R.string.no_members);
             }
-
-            membersInGroup = membersInGroup.trim().substring(0, membersInGroup.length() - 2);
 
             ((TextView)groupView.findViewById(R.id.group_members)).setText(membersInGroup);
             return groupView;

@@ -56,4 +56,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_groups">Groups</string>
     <string name="title_activity_group_detail_view">GroupDetailView</string>
+    <string name="title_create_group_dialog">New Group</string>
+    <string name="create_group_name_hint">Group name</string>
+    <string name="create_group_button">Create</string>
+    <string name="no_members">No members</string>
 </resources>

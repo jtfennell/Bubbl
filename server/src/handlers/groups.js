@@ -17,7 +17,8 @@ var groups = {
     },
 
     create: (req, res) => {
-        if (!(req.body.groupName.trim())) {
+        
+        if (!(req.body.name.trim())) {
             return res.status(400).json({"message":"group name required"});
         };
         
@@ -29,7 +30,7 @@ var groups = {
                 admin
             )
             VALUES (
-                '${req.body.groupName}',
+                '${req.body.name}',
                 '${(new Date()).getTime()}',
                 '${req.authenticatedUser.userId}'
             )
@@ -67,7 +68,6 @@ var groups = {
                     console.log(err)
                     return res.status(500).json({"message":"there was an internal server error."});
                 };
-                return res.status(201).json({"message":"group created"});
             })
         }
     },
