@@ -9,6 +9,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -30,6 +33,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener{
     private BubblService api;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_groups, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        int menuItemId = item.getItemId();
+        if (menuItemId == R.id.invites) {
+            launchInvitesActivity();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,5 +224,10 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
         GroupsAdapter groupAdapter = (GroupsAdapter)groupList.getAdapter();
         groupAdapter.add(group);
         groupAdapter.notifyDataSetChanged();
+    }
+
+    private void launchInvitesActivity() {
+        Intent viewInvites = new Intent(this,ViewInvites.class);
+        startActivity(viewInvites);
     }
 }

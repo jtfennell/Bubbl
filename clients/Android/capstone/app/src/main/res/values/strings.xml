@@ -63,4 +63,6 @@
     <string name="create_group_name_error">Please enter a group name</string>
     <string name="create_group_success">Group created</string>
     <string name="create_group_failure">Error creating group</string>
+    <string name="invites">Invites</string>
+    <string name="title_activity_view_invites">ViewInvites</string>
 </resources>

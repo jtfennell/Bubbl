@@ -53,7 +53,10 @@
         </activity>
         <activity
             android:name=".GroupDetailView"
-            android:label="@string/title_activity_group_detail_view"></activity>
+            android:label="@string/title_activity_group_detail_view" />
+        <activity
+            android:name=".ViewInvites"
+            android:label="@string/title_activity_view_invites"></activity>
     </application>
 
 </manifest>
