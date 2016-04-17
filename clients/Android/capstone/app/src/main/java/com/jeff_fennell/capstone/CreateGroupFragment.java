@@ -1,12 +1,14 @@
 package com.jeff_fennell.capstone;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.jeff_fennell.capstone.entities.Group;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,15 +56,28 @@ public class CreateGroupFragment extends DialogFragment {
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     Group newlyCreatedGroup = (Group) response.body();
-                    ((CreateGroupListener)getActivity()).updateGroupList(newlyCreatedGroup);
+                    ((CreateGroupListener) getActivity()).updateGroupList(newlyCreatedGroup);
+                    displaySuccessToast();
+                } else {
+                    displayErrorToast();
                 }
             }
 
             @Override
             public void onFailure(Call call, Throwable t) {
-
+                displayErrorToast();
             }
         });
+    }
+
+    private void displaySuccessToast() {
+        Context context = getActivity().getApplicationContext();
+        Utils.toast(context, R.string.create_group_success, Toast.LENGTH_LONG);
+    }
+
+    private void displayErrorToast() {
+        Context context = getActivity().getApplicationContext();
+        Utils.toast(context, R.string.create_group_failure,Toast.LENGTH_LONG);
     }
 
     public interface CreateGroupListener {

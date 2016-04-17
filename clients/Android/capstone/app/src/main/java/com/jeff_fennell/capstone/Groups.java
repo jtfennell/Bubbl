@@ -2,6 +2,7 @@ package com.jeff_fennell.capstone;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -197,6 +198,8 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
 
     @Override
     public void updateGroupList(Group group) {
+        Fragment createGroup = getFragmentManager().findFragmentByTag(CreateGroupFragment.FRAGMENT_TAG);
+        ((DialogFragment)createGroup).dismiss();
         GridView groupList = (GridView)findViewById(R.id.group_list);
         GroupsAdapter groupAdapter = (GroupsAdapter)groupList.getAdapter();
         groupAdapter.add(group);
