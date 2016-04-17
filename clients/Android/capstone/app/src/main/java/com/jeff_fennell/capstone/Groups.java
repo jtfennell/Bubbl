@@ -10,6 +10,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -23,12 +24,10 @@ import com.jeff_fennell.capstone.entities.Image;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener {
+public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener{
     private BubblService api;
 
     @Override
@@ -46,33 +45,6 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
 
     private void getAndPopulateGroups() {
         new GetGroupsWithImages(this).execute();
-    }
-
-    public void createGroup(String groupName) {
-        Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.API_BASE_URL)
-            .build();
-
-        BubblService api = retrofit.create(BubblService.class);
-
-        Call createNewGroup = api.createNewGroup(new Group(groupName), UserProfile.getAuthenticationToken(this));
-        createNewGroup.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()) {
-                    Group newlyCreatedGroup = (Group)response.body();
-                    ArrayAdapter<Group> groupAdapter = (ArrayAdapter)((GridView) findViewById(R.id.group_list)).getAdapter();
-                    groupAdapter.add(newlyCreatedGroup);
-                    groupAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
     }
 
     class GetGroupsWithImages extends AsyncTask<Void, Void, List<Group>>{
@@ -128,29 +100,25 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
     }
 
     public class GroupsAdapter extends ArrayAdapter<Group> {
-        private List<Group> groups;
-        private Activity activity;
 
         public GroupsAdapter(List<Group> groups, Activity activity) {
-            super(activity,0);
-            this.activity = activity;
-            this.groups = groups;
+            super(activity,R.layout.group_view, groups);
         }
 
         public int getCount() {
-            return groups.size();
+            return super.getCount();
         }
 
         public Group getItem(int position) {
-            return groups.get(position);
+            return super.getItem(position);
         }
 
         public long getItemId(int position) {
-            return groups.get(position).getGroupId();
+            return super.getItem(position).getGroupId();
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
-            Group group = groups.get(position);
+            Group group = getItem(position);
             LinearLayout groupView;
             if (convertView == null) {
                 groupView = (LinearLayout)getLayoutInflater().inflate(R.layout.group_view, parent, false);
@@ -161,26 +129,44 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
 
                 if (group.getGroupImageUrl() != null) {
                     Glide
-                            .with(activity)
-                            .load(group.getGroupImageUrl())
-                            .asBitmap()
-                            .placeholder(R.drawable.ic_people_white_48dp)
-                            .centerCrop()
-                            .into(new BitmapImageViewTarget(groupImage) {
-                                @Override
-                                protected void setResource(Bitmap resource) {
-                                    RoundedBitmapDrawable circularBitmapDrawable =
-                                            RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                                    circularBitmapDrawable.setCircular(true);
-                                    groupImage.setImageDrawable(circularBitmapDrawable);
-                                }
-                            });
+                        .with(getContext())
+                        .load(group.getGroupImageUrl())
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_people_white_48dp)
+                        .centerCrop()
+                        .into(new BitmapImageViewTarget(groupImage) {
+                            @Override
+                            protected void setResource(Bitmap resource) {
+                                RoundedBitmapDrawable circularBitmapDrawable =
+                                        RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                                circularBitmapDrawable.setCircular(true);
+                                groupImage.setImageDrawable(circularBitmapDrawable);
+                            }
+                        });
                 }
                 else {
                     groupImage.setImageDrawable(getDrawable(R.drawable.ic_people_white_48dp));
                 }
             } else {
                 groupView = (LinearLayout)convertView;
+                ((TextView)convertView.findViewById(R.id.group_name)).setText(group.getName());
+                final ImageView groupImage = (ImageView)groupView.findViewById(R.id.group_image);
+                Glide
+                    .with(getContext())
+                    .load(group.getGroupImageUrl())
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_people_white_48dp)
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(groupImage) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            groupImage.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+
             }
             return groupView;
         }
@@ -206,6 +192,14 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
 
     public void launchCreateGroupDialog(View view) {
         DialogFragment newFragment = new CreateGroupFragment();
-        newFragment.show(getFragmentManager(), SelectGroupDialog.FRAGMENT_TAG);
+        newFragment.show(getFragmentManager(), CreateGroupFragment.FRAGMENT_TAG);
+    }
+
+    @Override
+    public void updateGroupList(Group group) {
+        GridView groupList = (GridView)findViewById(R.id.group_list);
+        GroupsAdapter groupAdapter = (GroupsAdapter)groupList.getAdapter();
+        groupAdapter.add(group);
+        groupAdapter.notifyDataSetChanged();
     }
 }

@@ -43,11 +43,11 @@ var groups = {
 
                 addUserToGroup(result.rows[0].group_id);
                 
-                return res.status(204).json({
+                return res.status(201).json({
                     name: result.rows[0].name,
-                    createdOn: result.rows[0].created_on,
+                    created_on: result.rows[0].created_on,
                     admin: result.rows[0].admin,
-                    groupId: result.rows[0].group_id
+                    group_id: result.rows[0].group_id
                 });
             }
         );

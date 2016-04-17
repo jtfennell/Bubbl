@@ -60,4 +60,5 @@
     <string name="create_group_name_hint">Group name</string>
     <string name="create_group_button">Create</string>
     <string name="no_members">No members</string>
+    <string name="create_group_name_error">Please enter a group name</string>
 </resources>
