@@ -1,17 +1,26 @@
 package com.jeff_fennell.capstone.entities;
 
 public class Invite {
-    private Long groupId;
+    private Long inviteId;
+    private Group group;
 
     public Invite() {
 
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public Long getInviteId() {
+        return inviteId;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setInviteId(Long inviteId) {
+        this.inviteId = inviteId;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

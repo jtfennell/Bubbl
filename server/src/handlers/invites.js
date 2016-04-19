@@ -4,18 +4,33 @@ var invites = {
     getForUser: (req, res) => {
        database.query(
             `SELECT * 
-            FROM user_invited_to_group 
-            WHERE user_id=${req.authenticatedUser.userId}`
+            FROM user_invited_to_group, groups
+            WHERE user_id=${req.authenticatedUser.userId}
+            AND groups.group_id=user_invited_to_group.group_id
+            `
         , (err, result) => {
             if (err) {
                 return res.status(500).json({"message":"There was an internal service error"})
             };
-            return res.status(200).json({"invites":result.rows});
+
+            for (i = 0; i < result.rows.length; i++) {
+                var group = result.rows[i];
+                var inviteId = group.invite_id;
+                delete group.invite_id
+                inviteObject = {
+                    inviteId: inviteId,
+                    group: group
+                }
+                result.rows[i] = inviteObject;
+            }
+            return res.status(200).json(result.rows);
        });
     },
 
     accept: (req, res) => {
-        var idOfgroupToJoin = req.body.groupId;
+        console.log('here')
+        console.log(req.body)
+        var idOfgroupToJoin = req.body.group_id;
 
         if (!idOfgroupToJoin) {
             return res.status(400).json({"message":"group id required"});

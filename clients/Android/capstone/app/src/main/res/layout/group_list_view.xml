@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/group_members"
             android:text="user1, user2, user3, user4, user5"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:scrollbars="horizontal"/>
     </LinearLayout>
 </LinearLayout>

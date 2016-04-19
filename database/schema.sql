@@ -65,6 +65,7 @@ INSERT INTO groups(name, created_on, admin) values ('The worst group', 145982122
 INSERT INTO groups(name, created_on, admin) values ('Bae and Bro', 1459821220, 1); 
 INSERT INTO groups(name, created_on, admin) values ('Squad', 1459821220, 1);
 
+INSERT INTO user_invited_to_group(group_id, user_id) VALUES(2,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,1);
 INSERT INTO group_contains_user (group_id, user_id) values(1,2);
 INSERT INTO group_contains_user (group_id, user_id) values(2,2);

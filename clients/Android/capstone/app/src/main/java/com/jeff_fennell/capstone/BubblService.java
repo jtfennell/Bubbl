@@ -11,6 +11,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -35,8 +36,9 @@ public interface BubblService {
     @GET("invites")
     Call<List<Invite>> getInvites(@Header("x-access-token") String token);
 
+    @Headers("Content-Type:  application/json")
     @POST("invites")
-    Call<Void> acceptInvite(@Body long groupId, @Header("x-access-token") String token);
+    Call<Void> acceptInvite(@Body Group group, @Header("x-access-token") String token);
 
     @DELETE("invites/{inviteId}")
     Call<Void> deleteInvite(@Path("inviteId") long inviteId, @Header("x-access-token") String token);

@@ -63,6 +63,13 @@
     <string name="create_group_name_error">Please enter a group name</string>
     <string name="create_group_success">Group created</string>
     <string name="create_group_failure">Error creating group</string>
-    <string name="invites">Invites</string>
-    <string name="title_activity_view_invites">ViewInvites</string>
+    <string name="view_invites">View Invites</string>
+    <string name="title_activity_view_invites">Invites</string>
+    <string name="no_invite_message">You have no pending invitations.</string>
+    <string name="join_group_button">Join</string>
+    <string name="delete_invite_button">Delete</string>
+    <string name="invite_accept_success">Invite accepted</string>
+    <string name="invite_delete_success">Invite deleted</string>
+    <string name="invite_delete_failure">Problem deleting invite.</string>
+    <string name="invite_accept_failure">Problem accepting invite.</string>
 </resources>

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Utils {
 
     public static String getTrimmedEditTextInput(Activity activity, int editTextId) {
@@ -21,5 +24,14 @@ public class Utils {
         String successString = context.getString(stringResourceId);
         Toast toast = Toast.makeText(context, successString, length);
         toast.show();
+    }
+
+    public static BubblService getClient() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(BuildConfig.API_BASE_URL)
+                .build();
+        BubblService api = retrofit.create(BubblService.class);
+        return api;
     }
 }
