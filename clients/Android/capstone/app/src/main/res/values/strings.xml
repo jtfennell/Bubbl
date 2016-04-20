@@ -72,4 +72,5 @@
     <string name="invite_delete_success">Invite deleted</string>
     <string name="invite_delete_failure">Problem deleting invite.</string>
     <string name="invite_accept_failure">Problem accepting invite.</string>
+    <string name="members_in_group">Friends</string>
 </resources>

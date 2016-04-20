@@ -24,7 +24,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import com.jeff_fennell.capstone.entities.Group;
 
+import java.util.List;
+
 public class CameraActivity extends Activity implements SelectGroupDialog.OnGroupSelectedListener {
+
+    private List<Group> groups = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,4 +66,13 @@ public class CameraActivity extends Activity implements SelectGroupDialog.OnGrou
         Camera2BasicFragment cameraFragment = (Camera2BasicFragment)getFragmentManager().findFragmentByTag(Camera2BasicFragment.FRAGMENT_TAG);
         cameraFragment.updateGroupInfo(groupSelected);
     }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
 }

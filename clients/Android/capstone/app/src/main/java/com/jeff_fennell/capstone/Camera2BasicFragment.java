@@ -63,6 +63,7 @@ import com.jeff_fennell.capstone.entities.Group;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -997,6 +998,9 @@ public class Camera2BasicFragment extends Fragment
 
     private void launchGroupsActivity() {
         Intent groupsActivity = new Intent(getActivity(), Groups.class);
+        Bundle groupPayload = new Bundle();
+        groupPayload.putSerializable("groupList", (Serializable)((CameraActivity) getActivity()).getGroups());
+        groupsActivity.putExtras(groupPayload);
         startActivity(groupsActivity);
     }
 }

@@ -12,7 +12,7 @@ public class Group implements Serializable {
     @SerializedName("created_on")
     private Long createdOnTimestamp;
     private Long admin;
-    private List members;
+    private List<User> members;
     private String groupImageUrl;
     public static final String serializeKey = "GROUP";
 

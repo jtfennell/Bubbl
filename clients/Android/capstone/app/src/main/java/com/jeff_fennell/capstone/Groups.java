@@ -10,11 +10,9 @@ import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -28,11 +26,8 @@ import com.jeff_fennell.capstone.entities.Image;
 import java.io.IOException;
 import java.util.List;
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener{
-    private BubblService api;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,70 +49,13 @@ public class Groups extends Activity implements CreateGroupFragment.CreateGroupL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        List<Group> groups = (List<Group>)getIntent().getExtras().get("groupList");
         setContentView(R.layout.activity_groups);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BuildConfig.API_BASE_URL)
-                .build();
-        api = retrofit.create(BubblService.class);
-        getAndPopulateGroups();
-    }
-
-    private void getAndPopulateGroups() {
-        new GetGroupsWithImages(this).execute();
-    }
-
-    class GetGroupsWithImages extends AsyncTask<Void, Void, List<Group>>{
-        Activity activity;
-
-        public GetGroupsWithImages(Activity activity) {
-            this.activity = activity;
-        }
-
-        @Override
-        protected List<Group> doInBackground(Void... params) {
-            Call<List<Group>> getGroups = api.getGroups(UserProfile.getAuthenticationToken(activity));
-            List<Group> groups = null;
-            try {
-                groups = getGroups.execute().body();
-                for (Group group : groups) {
-                    Call getGroupImage = api.getImages(
-                        Image.GROUP_PROFILE,
-                        group.getGroupId(),
-                        UserProfile.getAuthenticationToken(activity)
-                    );
-                    List<Image> imageList = (List<Image>)getGroupImage.execute().body();
-                    String groupProfileImageUrl = null;
-                    if (imageList.size() > 0) {
-                        groupProfileImageUrl = imageList.get(0).getUrl();
-                    }
-
-                    group.setGroupImageUrl(groupProfileImageUrl);
-                }
-            } catch (IOException e) {
-                System.out.print("hi");
-                //display error message
-            }
-            return groups;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //start spinner
-        }
-
-        @Override
-        protected void onPostExecute(List<Group> groups) {
-            super.onPostExecute(groups);
-            //stop spinner
-            GridView groupGrid = (GridView)findViewById(R.id.group_list);
-            GroupsAdapter adapter = new GroupsAdapter(groups, activity);
-            groupGrid.setAdapter(adapter);
-            groupGrid.setOnItemClickListener(new GroupClickListener(activity));
-
-        }
+        GridView groupGrid = (GridView)findViewById(R.id.group_list);
+        GroupsAdapter adapter = new GroupsAdapter(groups, this);
+        groupGrid.setAdapter(adapter);
+        groupGrid.setOnItemClickListener(new GroupClickListener(this));
     }
 
     public class GroupsAdapter extends ArrayAdapter<Group> {
