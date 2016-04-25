@@ -26,6 +26,7 @@ import com.jeff_fennell.capstone.entities.Group;
 import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.User;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -180,9 +181,12 @@ public class SelectGroupDialog extends DialogFragment {
         }
 
         private void removeThisUserFromMemberList(List<User> membersInGroup) {
-            for (User user : membersInGroup) {
-                if (user.getUserId() == UserProfile.getUserId(getActivity())) {
-                    membersInGroup.remove(user);
+            Iterator<User> iter = membersInGroup.iterator();
+            while (iter.hasNext()) {
+                User user = iter.next();
+
+                if ((user.getUserId() == UserProfile.getUserId(getActivity()))) {
+                    iter.remove();
                 }
             }
         }
