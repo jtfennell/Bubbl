@@ -47,7 +47,6 @@ public class  GroupDetailView extends Activity {
         }
         HListView memberList = (HListView)findViewById(R.id.members_in_group);
         memberList.setAdapter(new MemberAdapter(group.getMembers(), this));
-        
     }
 
     public class MemberAdapter extends ArrayAdapter<User>{
