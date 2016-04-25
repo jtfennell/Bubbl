@@ -21,6 +21,8 @@ import com.jeff_fennell.capstone.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.List;
+
+import it.sephiroth.android.library.widget.HListView;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -43,8 +45,9 @@ public class  GroupDetailView extends Activity {
         } else {
             groupEmptyMessage.setVisibility(View.VISIBLE);
         }
-
-        ((ListView)findViewById(R.id.members_in_group)).setAdapter(new MemberAdapter(group.getMembers(), this));
+        HListView memberList = (HListView)findViewById(R.id.members_in_group);
+        memberList.setAdapter(new MemberAdapter(group.getMembers(), this));
+        
     }
 
     public class MemberAdapter extends ArrayAdapter<User>{
