@@ -58,7 +58,7 @@ INSERT INTO users(username, email, password, first_name, last_name) values('nail
 
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/e_trim/w_150,h_150,c_thumb,g_face/bike.jpg',1459827876);
 INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
-UPDATE users SET image_id='1' where user_id='1';
+UPDATE users SET image_id='1' where user_id='2';
 
 INSERT INTO groups(name, created_on, admin, group_image_id) values ('Bae', 1459821220, 1, 1);
 INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);

@@ -4,6 +4,7 @@ var images = {
     getUrls: (req, res) => {
         var typeOfImage = req.query.type;
         var groupId = req.query.groupId;
+        var userId = req.query.userId;
 
         if (!typeOfImage) {
             return res.status(400).json({"message":"type required"});
@@ -11,10 +12,13 @@ var images = {
 
         var getImages = {
             'userProfile': () => {
+                if (!userId) {
+                    return res.status(400).json("bad request")
+                };
                 database.query(
                     `SELECT image_id, date_uploaded, url
                     FROM users NATURAL JOIN images
-                    WHERE user_id=${req.authenticatedUser.userId}`
+                    WHERE user_id=${userId}`
                     , (err, result) => {
                         if (err) {
                             return res.status(500).json("internal server error");

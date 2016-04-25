@@ -54,4 +54,7 @@ public interface BubblService {
 
     @GET("images")
     Call<List<Image>> getImages(@Query("type") String type, @Query("groupId")long groupId, @Header("x-access-token") String token);
+
+    @GET("images")
+    Call<List<Image>> getProfileImage(@Query("type") String type, @Query("userId") long userId, @Header("x-access-token") String token);
 }

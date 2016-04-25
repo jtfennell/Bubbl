@@ -73,4 +73,6 @@
     <string name="invite_delete_failure">Problem deleting invite.</string>
     <string name="invite_accept_failure">Problem accepting invite.</string>
     <string name="members_in_group">Friends</string>
+    <string name="group_empty_message">There are no friends in this group. Invite some!</string>
+    <string name="invite_friends_button">Invite</string>
 </resources>

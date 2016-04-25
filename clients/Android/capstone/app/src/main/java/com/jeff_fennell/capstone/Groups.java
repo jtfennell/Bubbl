@@ -5,7 +5,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -22,10 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jeff_fennell.capstone.entities.Group;
-import com.jeff_fennell.capstone.entities.Image;
-import java.io.IOException;
 import java.util.List;
-import retrofit2.Call;
 
 public class Groups extends Activity implements CreateGroupFragment.CreateGroupListener{
 

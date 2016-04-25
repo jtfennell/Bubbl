@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jeff_fennell.capstone.entities.Group;
@@ -110,20 +109,20 @@ public class SelectGroupDialog extends DialogFragment {
 
             if (group.getGroupImageUrl() != null) {
                 Glide
-                        .with(getContext())
-                        .load(group.getGroupImageUrl())
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_people_white_48dp)
-                        .centerCrop()
-                        .into(new BitmapImageViewTarget(groupImage) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                groupImage.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
+                    .with(getContext())
+                    .load(group.getGroupImageUrl())
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_people_white_48dp)
+                    .centerCrop()
+                    .into(new BitmapImageViewTarget(groupImage) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(getContext().getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            groupImage.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
             }
 
             ((TextView)groupView.findViewById(R.id.group_members)).setText(membersInGroup);
