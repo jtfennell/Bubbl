@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS group_contains_user (
 );
 
 CREATE TABLE IF NOT EXISTS user_invited_to_group (
-    invite_id bigserial PRIMARY KEY,
     user_id bigint NOT NULL references users,
-    group_id bigint NOT NULL references groups
+    group_id bigint NOT NULL references groups,
+    PRIMARY KEY (user_id, group_id)
 );
 
 CREATE TABLE IF NOT EXISTS group_contains_image (

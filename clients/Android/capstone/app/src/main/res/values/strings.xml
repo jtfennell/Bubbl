@@ -75,4 +75,11 @@
     <string name="members_in_group">Friends</string>
     <string name="group_empty_message">There are no friends in this group. Invite some!</string>
     <string name="invite_friends_button">Invite</string>
+    <string name="invite_member_title">Invite a Friend</string>
+    <string name="invite_member_username_hint">Username</string>
+    <string name="invite_button">Send</string>
+    <string name="invite_user_bad_username">Please enter a username</string>
+    <string name="invite_user_success">Invite sent</string>
+    <string name="invite_user_failure">Invite failed. Try again later.</string>
+    <string name="user_not_found">User does not exist</string>
 </resources>

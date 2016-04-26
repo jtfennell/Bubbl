@@ -1,5 +1,6 @@
 package com.jeff_fennell.capstone;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.jeff_fennell.capstone.entities.Group;
@@ -24,9 +26,11 @@ import java.util.List;
 
 import it.sephiroth.android.library.widget.HListView;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
-public class  GroupDetailView extends Activity {
+public class  GroupDetailView extends Activity implements InviteMemberDialog.InviteMemberListener {
+    private Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,8 @@ public class  GroupDetailView extends Activity {
         setContentView(R.layout.activity_group_detail_view);
         Group groupToDisplay = (Group)getIntent().getExtras().get(Group.serializeKey);
         getActionBar().setTitle(groupToDisplay.getName());
+        this.group = groupToDisplay;
+        hideInviteButtonIfNotAdmin();
         displayMembers(groupToDisplay);
     }
 
@@ -74,6 +80,13 @@ public class  GroupDetailView extends Activity {
 
             return memberView;
         }
+    }
+
+    public void openInviteDialog(View view) {
+        getFragmentManager()
+            .beginTransaction()
+            .add(new InviteMemberDialog(), InviteMemberDialog.FRAGMENT_TAG)
+            .commit();
     }
 
     public class GetMemberImageTask extends AsyncTask<Void, Void, Image> {
@@ -130,6 +143,73 @@ public class  GroupDetailView extends Activity {
                         }
                     });
             }
+        }
+    }
+
+    @Override
+    public void inviteMember(String username) {
+        Call inviteMember = Utils
+                .getClient()
+                .inviteMemberToGroup(
+                        username,group.getGroupId(),
+                        UserProfile.getAuthenticationToken(this)
+                );
+        inviteMember.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                    toastSuccessMessage();
+                    dismissInviteFragment();
+                } else if (response.code() == 404){
+                    toastMemberNotFoundMessage();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                toastErrorMessage();
+            }
+        });
+    }
+
+    private void toastSuccessMessage() {
+        Utils.toast(
+                getApplicationContext(),
+                R.string.invite_user_success,
+                Toast.LENGTH_LONG
+        );
+    }
+
+    private void toastMemberNotFoundMessage() {
+        Utils.toast(
+            getApplicationContext(),
+            R.string.user_not_found,
+            Toast.LENGTH_LONG
+        );
+    }
+
+    private void dismissInviteFragment() {
+        Fragment  inviteFragment = getFragmentManager()
+            .findFragmentByTag(
+                InviteMemberDialog.FRAGMENT_TAG
+            );
+        getFragmentManager()
+            .beginTransaction()
+            .remove(inviteFragment)
+            .commit();
+    }
+
+    private void toastErrorMessage() {
+        Utils.toast(
+                this,
+                R.string.invite_user_failure,
+                Toast.LENGTH_LONG
+        );
+    }
+
+    private void hideInviteButtonIfNotAdmin() {
+        if (UserProfile.getUserId(this) != group.getAdmin()) {
+            findViewById(R.id.invite_member_button).setVisibility(View.GONE);
         }
     }
 }

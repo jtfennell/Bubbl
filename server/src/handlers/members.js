@@ -47,38 +47,42 @@ var members = {
         }
         ifRequestingUserIsTheGroupAdmin(req, res, groupId, () => {
             database.query(
-                `SELECT users.user_id 
-                FROM group_contains_user NATURAL JOIN users
-                WHERE group_id='${groupId}'
-                AND username='${usernameOfUserToInvite}'`,
+                `SELECT user_id
+                FROM users 
+                WHERE username='${usernameOfUserToInvite}'`,
                 (err, result) => {
                     if (err) {
+                        console.log(err)
                         return res.status(500).json({"message":"there was an internal server error"});
                     }
 
-                    if (result.rows.length === 1) {
-                        database.query(
-                            `INSERT INTO user_invited_to_group
-                            (
-                                group_id,
-                                user_id
-                            )
-                            VALUES
-                            (
-                                '${groupId}',
-                                '${result.rows[0].user_id}'
-                            )`,
-                            (err, result) => {
-                                if (err) {
-                                    return (err.code===23505) ? res.status(422).json({"message":"user has not accepted invite"}) :
-                                    res.status(500).json({"message":"there was an internal server error"})
-                                };
+                    if (!(result.rows.length === 1)) {
+                        return res.status(404).json({"message":"user does not exist"});
+                    };
 
-                                return res.status(204).json({"message":"success"})
-                            }
+                    database.query(
+                        `INSERT INTO user_invited_to_group
+                        (
+                            group_id,
+                            user_id
                         )
-                    }
-                    return res.status(404).json({"message":"user does not exist"});
+                        VALUES
+                        (
+                            '${groupId}',
+                            '${result.rows[0].user_id}'
+                        )`,
+                        (err, result) => {
+                            if (err) {
+                                if(+err.code === 23505) {
+                                    return res.status(200).json({"message":"invite sent"})
+                                }
+                                
+                                return res.status(500).json({"message":"there was an internal server error"})
+                            };
+
+                            return res.status(204).json({"message":"success"})
+                        }
+                    ) 
                 }
             );
         });   
