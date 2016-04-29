@@ -10,26 +10,29 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.jeff_fennell.capstone.entities.Album;
 import com.jeff_fennell.capstone.entities.Group;
 import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.List;
-
 import it.sephiroth.android.library.widget.HListView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class  GroupDetailView extends Activity implements InviteMemberDialog.InviteMemberListener {
+public class  GroupDetailView extends Activity implements
+        InviteMemberDialog.InviteMemberListener,
+        CreateAlbumDialog.CreateAlbumListener {
     private Group group;
 
     @Override
@@ -41,6 +44,7 @@ public class  GroupDetailView extends Activity implements InviteMemberDialog.Inv
         this.group = groupToDisplay;
         hideInviteButtonIfNotAdmin();
         displayMembers(groupToDisplay);
+        displayAlbums(groupToDisplay);
     }
 
     private void displayMembers(Group group) {
@@ -53,6 +57,45 @@ public class  GroupDetailView extends Activity implements InviteMemberDialog.Inv
         }
         HListView memberList = (HListView)findViewById(R.id.members_in_group);
         memberList.setAdapter(new MemberAdapter(group.getMembers(), this));
+    }
+
+    @Override
+    public void createAlbum(String albumName) {
+        Album newAlbum = new Album(group.getGroupId(), albumName);
+        Call<Album> createAlbum = Utils
+           .getClient()
+           .createNewAlbum(
+               newAlbum,
+               UserProfile.getAuthenticationToken(this)
+           );
+
+        createAlbum.enqueue(new Callback<Album>() {
+            @Override
+            public void onResponse(Call<Album> call, Response<Album> response) {
+                if (response.isSuccessful()) {
+                    Utils.toast(
+                            getApplicationContext(),
+                            R.string.album_created,
+                            Toast.LENGTH_LONG
+                    );
+                } else {
+                    Utils.toast(
+                            getApplicationContext(),
+                            R.string.album_create_fail,
+                            Toast.LENGTH_LONG
+                    );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Album> call, Throwable t) {
+                Utils.toast(
+                        getApplicationContext(),
+                        R.string.album_create_fail,
+                        Toast.LENGTH_LONG
+                );
+            }
+        });
     }
 
     public class MemberAdapter extends ArrayAdapter<User>{
@@ -74,7 +117,7 @@ public class  GroupDetailView extends Activity implements InviteMemberDialog.Inv
             }
 
             TextView memberName = (TextView)memberView.findViewById(R.id.member_name);
-            memberName.setText(StringUtils.join(user.getFirstName() + " " + user.getLastName()));
+            memberName.setText(StringUtils.join(user.getFirstName()));
             final ImageView userImage = (ImageView)memberView.findViewById(R.id.member_profile_image);
             new GetMemberImageTask(activity, user.getUserId(), userImage).execute();
 
@@ -211,5 +254,98 @@ public class  GroupDetailView extends Activity implements InviteMemberDialog.Inv
         if (UserProfile.getUserId(this) != group.getAdmin()) {
             findViewById(R.id.invite_member_button).setVisibility(View.GONE);
         }
+    }
+
+    public void openCreateAlbumDialog(View view) {
+        getFragmentManager()
+            .beginTransaction()
+            .add(
+                new CreateAlbumDialog(),
+                CreateAlbumDialog.FRAGMENT_TAG
+            ).commit();
+    }
+
+    private void displayAlbums(Group group) {
+        Call<List<Album>> getAlbums = Utils
+            .getClient()
+            .getAlbumsForGroup(
+                group.getGroupId(),
+                UserProfile.getAuthenticationToken(this)
+            );
+
+        new GetAlbums(this).execute();
+    }
+
+    public class GetAlbums extends AsyncTask<Void, Void, List<Album>> {
+        private Activity activity;
+
+        public GetAlbums(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //start a spinner or something
+        }
+
+        @Override
+        protected List<Album> doInBackground(Void... params) {
+            Call getAlbums = Utils.getClient()
+                .getAlbumsForGroup(
+                    group.getGroupId(),
+                    UserProfile.getAuthenticationToken(activity)
+                );
+            List<Album> albums = null;
+            try {
+               albums = (List<Album>)getAlbums.execute().body();
+            } catch (IOException e) {
+                //render error message for loading albums
+            }
+            return albums;
+        }
+
+        @Override
+        protected void onPostExecute(List<Album> albums) {
+            super.onPostExecute(albums);
+
+            if (albums.size() > 0) {
+                setUpAlbumList(albums);
+            } else {
+                setNoAlbumsMessage();
+            }
+
+        }
+    }
+
+    public class AlbumAdapter extends ArrayAdapter<Album>{
+
+        public AlbumAdapter(Activity activity, List<Album> albums) {
+            super(getApplicationContext(), R.layout.album_preview, albums);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Album album = getItem(position);
+            RelativeLayout albumView = null;
+
+            if (convertView != null) {
+                albumView = (RelativeLayout)convertView;
+            } else {
+                albumView = (RelativeLayout)getLayoutInflater().inflate(R.layout.album_preview, null);
+            }
+            TextView albumName = (TextView)albumView.findViewById(R.id.album_name);
+            albumName.setText(album.getName());
+            return albumView;
+        }
+    }
+
+    private void setUpAlbumList(List<Album> albums) {
+        GridView albumList = (GridView)findViewById(R.id.album_list);
+        albumList.setAdapter(new AlbumAdapter(this, albums));
+    }
+
+    private void setNoAlbumsMessage() {
+
     }
 }

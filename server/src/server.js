@@ -65,6 +65,7 @@ app.get('/api/v1/albums', [requireAccessToken, albums.getByGroup]);
 app.get('/api/v1/albums/preview', [requireAccessToken, albums.getPreviewImages]);
 app.post ('/api/v1/albums', [requireAccessToken, albums.create]);
 app.delete('/api/v1/albums', [requireAccessToken, albums.delete]);
+//add one to get all photos in an album
 app.use('/api/v1/albums', methodNotAllowed);
 
 http.createServer(app).listen(HTTP_PORT);

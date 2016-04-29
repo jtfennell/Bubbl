@@ -160,7 +160,7 @@ var images = {
     },
 
     delete: (req, res) => {
-
+        return res.status(501).json("not implemented");
     }
 }
 

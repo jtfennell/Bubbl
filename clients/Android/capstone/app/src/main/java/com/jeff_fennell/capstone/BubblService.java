@@ -1,5 +1,6 @@
 package com.jeff_fennell.capstone;
 
+import com.jeff_fennell.capstone.entities.Album;
 import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.LoginResult;
 import com.jeff_fennell.capstone.entities.Group;
@@ -57,4 +58,13 @@ public interface BubblService {
 
     @GET("images")
     Call<List<Image>> getProfileImage(@Query("type") String type, @Query("userId") long userId, @Header("x-access-token") String token);
+
+    @GET("albums")
+    Call<List<Album>> getAlbumsForGroup(@Query("groupId") long groupId, @Header("x-access-token") String token);
+
+    @POST("albums")
+    Call<Album> createNewAlbum(@Body Album album, @Header("x-access-token") String token);
+
+    @GET("albums")
+    Call<List<Image>> getAlbumPreviewImages(@Query("groupId") long groupId, @Header("x-access-token") String token);
 }

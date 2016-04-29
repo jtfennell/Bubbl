@@ -47,7 +47,7 @@ public class InviteMemberDialog extends DialogFragment {
     }
 
     private boolean validUsername(String username) {
-        return !username.equals("");
+        return !username.isEmpty();
     }
 
 }

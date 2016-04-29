@@ -12,7 +12,8 @@ var albums = {
             database.query(
             `SELECT albums.name, album_id, albums.created_on, groups.group_id, created_by
             FROM groups, albums
-            WHERE groups.group_id=${groupId}`,
+            WHERE albums.group_id=${groupId}
+            AND groups.group_id=${groupId}`,
             (err, result) => {
                 if (err) {
                     console.log(err)

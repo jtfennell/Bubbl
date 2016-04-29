@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS group_contains_user (
 );
 
 CREATE TABLE IF NOT EXISTS user_invited_to_group (
-    user_id bigint NOT NULL references users,
+    user_id  bigint NOT NULL references users,
     group_id bigint NOT NULL references groups,
     PRIMARY KEY (user_id, group_id)
 );
@@ -45,8 +45,21 @@ CREATE TABLE IF NOT EXISTS group_contains_image (
 );
 
 CREATE TABLE IF NOT EXISTS user_uploads_image (
-    user_id bigint NOT NULL REFERENCES users,
+    user_id  bigint NOT NULL REFERENCES users,
     image_id bigint NOT NULL REFERENCES images
+);
+
+CREATE TABLE IF NOT EXISTS albums (
+    album_id   bigserial PRIMARY KEY,
+    name       text UNIQUE NOT NULL,
+    created_on bigint NOT NULL,
+    group_id bigint NOT NULL references groups,
+    created_by bigint NOT NULL references users
+);
+
+CREATE TABLE IF NOT EXISTS album_contains_image (
+    album_id bigint NOT NULL references albums,
+    image_id bigint NOT NULL references images
 );
 
 INSERT INTO users(username, email, password, first_name, last_name) values('jeff', 'fake@email.com', crypt('password',gen_salt('bf')), 'Jeff', 'Fennell');
@@ -57,8 +70,11 @@ INSERT INTO users(username, email, password, first_name, last_name) values('what
 INSERT INTO users(username, email, password, first_name, last_name) values('nails', 'fake123@email.com', crypt('password',gen_salt('bf')), 'Misa', 'Pham ');
 
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/e_trim/w_150,h_150,c_thumb,g_face/bike.jpg',1459827876);
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/w_250,h_250,c_thumb,g_face/woman.jpg', 1459921220);
 INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
 UPDATE users SET image_id='1' where user_id='2';
+INSERT INTO user_uploads_image (user_id, image_id) values (1,2);
+UPDATE users SET image_id='2' where user_id='6';
 
 INSERT INTO groups(name, created_on, admin, group_image_id) values ('Bae', 1459821220, 1, 1);
 INSERT INTO groups(name, created_on, admin) values ('The worst group', 1459821220, 2);
@@ -80,7 +96,14 @@ INSERT INTO group_contains_user (group_id, user_id) values(4,6);
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample.jpg', 1459821220);
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample2.jpg', 1459821220);
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample3.jpg', 1459821220);
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/dog.jpg', 1459921220);
 
-INSERT INTO group_contains_image(group_id, image_id) values(1,2);
 INSERT INTO group_contains_image(group_id, image_id) values(1,3);
-INSERT INTO group_contains_image(group_id, image_id) values(2,4);
+INSERT INTO group_contains_image(group_id, image_id) values(1,4);
+INSERT INTO group_contains_image(group_id, image_id) values(2,5);
+
+INSERT INTO albums(name, created_on, group_id, created_by) VALUES('Hermosa', 1461654973, 1, 1);
+INSERT INTO albums(name, created_on, group_id, created_by) VALUES('Hiking', 1461854973, 1, 1);
+INSERT INTO albums(name, created_on, group_id, created_by) VALUES('Dogs', 1461854973, 1, 2);
+
+INSERT INTO album_contains_image(album_id, image_id) values (1,6);
