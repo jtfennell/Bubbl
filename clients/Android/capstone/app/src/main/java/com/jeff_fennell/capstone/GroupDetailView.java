@@ -24,6 +24,7 @@ import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import it.sephiroth.android.library.widget.HListView;
 import retrofit2.Call;
@@ -61,7 +62,7 @@ public class  GroupDetailView extends Activity implements
 
     @Override
     public void createAlbum(String albumName) {
-        Album newAlbum = new Album(group.getGroupId(), albumName);
+        Album newAlbum = new Album(group.getGroupId(), albumName, UserProfile.getUserId(this));
         Call<Album> createAlbum = Utils
            .getClient()
            .createNewAlbum(
@@ -318,26 +319,103 @@ public class  GroupDetailView extends Activity implements
         }
     }
 
+    static class ViewHolder {
+        ImageView image1, image2, image3, image4, image5;
+        TextView albumName;
+    }
+
     public class AlbumAdapter extends ArrayAdapter<Album>{
+        private Activity activity;
 
         public AlbumAdapter(Activity activity, List<Album> albums) {
             super(getApplicationContext(), R.layout.album_preview, albums);
+            this.activity = activity;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final ViewHolder holder;
             Album album = getItem(position);
-            RelativeLayout albumView = null;
 
-            if (convertView != null) {
-                albumView = (RelativeLayout)convertView;
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.album_preview, null);
+                holder = new ViewHolder();
+
+                holder.image1 = (ImageView) convertView.findViewById(R.id.image_1);
+                holder.image2 = (ImageView) convertView.findViewById(R.id.image_2);
+                holder.image3 = (ImageView) convertView.findViewById(R.id.image_3);
+                holder.image4 = (ImageView) convertView.findViewById(R.id.image_4);
+                holder.image5 = (ImageView) convertView.findViewById(R.id.image_5);
+                holder.albumName = (TextView) convertView.findViewById(R.id.album_name);
+
+                convertView.setTag(holder);
             } else {
-                albumView = (RelativeLayout)getLayoutInflater().inflate(R.layout.album_preview, null);
+                holder = (ViewHolder) convertView.getTag();
             }
-            TextView albumName = (TextView)albumView.findViewById(R.id.album_name);
-            albumName.setText(album.getName());
-            return albumView;
+
+            holder.albumName.setText(album.getName());
+
+            Call<List<Image>> getAlbumPreview = Utils.getClient()
+                .getAlbumPreviewImages(
+                    album.getGroupId(),
+                    album.getAlbumId(),
+                    UserProfile.getAuthenticationToken(activity)
+                );
+
+            getAlbumPreview.enqueue(new Callback<List<Image>>() {
+                @Override
+                public void onResponse(Call<List<Image>> call, Response<List<Image>> response) {
+                    if (response.isSuccessful()) {
+                        List<Image> previewImages = response.body();
+                        for (int i = 0; i < previewImages.size(); i++) {
+                            Image image = previewImages.get(i);
+
+                            ImageView previewImageView = null;
+                            if (i == 0) {
+                                previewImageView = holder.image1;
+                            } else if (i == 1) {
+                                previewImageView = holder.image2;
+                            } else if (i == 2) {
+                                previewImageView = holder.image3;
+                            } else if (i == 3) {
+                                previewImageView = holder.image4;
+                            } else if (i == 4) {
+                                previewImageView = holder.image5;
+                            }
+                            final ImageView previewImage = previewImageView;
+
+                            Glide
+                                .with(activity)
+                                .load(image.getUrl())
+                                .asBitmap()
+                                .placeholder(R.drawable.ic_people_white_48dp)
+                                .centerCrop()
+                                .into(new BitmapImageViewTarget(previewImageView) {
+                                    @Override
+                                    protected void setResource(Bitmap resource) {
+                                        RoundedBitmapDrawable circularBitmapDrawable =
+                                                RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
+                                        circularBitmapDrawable.setCircular(true);
+                                        previewImage.setImageDrawable(circularBitmapDrawable);
+                                    }
+                                });
+                        }
+                    } else {
+                        //set no images message
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<Image>> call, Throwable t) {
+
+                }
+            });
+            return convertView;
         }
+    }
+
+    private void loadAlbumPreviewImage() {
+
     }
 
     private void setUpAlbumList(List<Album> albums) {

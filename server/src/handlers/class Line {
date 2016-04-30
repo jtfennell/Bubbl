@@ -1,6 +1,0 @@
-class Line {
-    constructor() {
-
-    }
-    x = 4;
-}

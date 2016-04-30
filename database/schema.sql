@@ -97,8 +97,17 @@ INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/im
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample2.jpg', 1459821220);
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/sample3.jpg', 1459821220);
 INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/dog.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('http://res-4.cloudinary.com/demo/image/upload/c_fill,g_north,h_100,w_120/f_auto/standing_woman.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('http://res-2.cloudinary.com/demo/image/upload/c_thumb,g_face,h_100,r_max,w_120/f_auto/face_left.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('http://res-5.cloudinary.com/demo/image/upload/c_fill,e_saturation:-70,h_100,w_120/f_auto/horses.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('http://res-1.cloudinary.com/demo/image/upload/c_fill,h_100,w_120/c_fill,e_brightness:100,h_100,u_site_bg.jpg,w_120/f_auto/smartphone.png', 1459921220);
 
 INSERT INTO group_contains_image(group_id, image_id) values(1,3);
+INSERT INTO group_contains_image(group_id, image_id) values(1,6);
+INSERT INTO group_contains_image(group_id, image_id) values(1,7);
+INSERT INTO group_contains_image(group_id, image_id) values(1,8);
+INSERT INTO group_contains_image(group_id, image_id) values(1,9);
+INSERT INTO group_contains_image(group_id, image_id) values(1,10);
 INSERT INTO group_contains_image(group_id, image_id) values(1,4);
 INSERT INTO group_contains_image(group_id, image_id) values(2,5);
 
@@ -107,3 +116,7 @@ INSERT INTO albums(name, created_on, group_id, created_by) VALUES('Hiking', 1461
 INSERT INTO albums(name, created_on, group_id, created_by) VALUES('Dogs', 1461854973, 1, 2);
 
 INSERT INTO album_contains_image(album_id, image_id) values (1,6);
+INSERT INTO album_contains_image(album_id, image_id) values(1,7);
+INSERT INTO album_contains_image(album_id, image_id) values(1,8);
+INSERT INTO album_contains_image(album_id, image_id) values(1,9);
+INSERT INTO album_contains_image(album_id, image_id) values(1,10);

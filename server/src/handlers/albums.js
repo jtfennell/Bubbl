@@ -27,15 +27,17 @@ var albums = {
     },
 
     getPreviewImages:(req, res) => {
+        var albumId = req.query.albumId;
         var groupId = req.query.groupId;
 
-        if (!groupId) {
+        if (!groupId || !albumId) {
             return res.status(400).json("bad request");
         };
 
         confirmUserInGroupAndThen(req, res, groupId, () => {
             database.query(
-                `SELECT * FROM images NATURAL JOIN group_contains_image
+                `SELECT * FROM images NATURAL JOIN album_contains_image
+                WHERE album_id=${albumId}
                 LIMIT 5`,
                 (err, result) => {
                     if (err) {
