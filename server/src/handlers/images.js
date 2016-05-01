@@ -1,4 +1,5 @@
 var database  = require('../../../database/pg-client.js');
+var cloudinary = require('cloudinary');
 
 var images = {
     getUrls: (req, res) => {

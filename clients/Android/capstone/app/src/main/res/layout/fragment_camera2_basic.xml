@@ -25,19 +25,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_flash_auto_white_36dp"
-        android:layout_marginTop="@dimen/abc_button_inset_vertical_material"
         android:background="@android:color/transparent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/imageButton" />
+        android:id="@+id/imageButton"
+        android:layout_alignTop="@+id/camera_snap_button"
+        android:layout_alignParentStart="true" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:id="@+id/group_container"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:orientation="horizontal"
         android:onClick="promptUserForGroup"
-        android:longClickable="true">
+        android:longClickable="true"
+        android:layout_alignTop="@+id/camera_snap_button"
+        android:layout_alignParentEnd="true">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,10 +47,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/camera_group_selected"
-            android:text="group Name"
+            android:text="@string/group_default"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/album_container"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:onClick="promptUserForAlbum"
+        android:longClickable="true"
+        android:layout_below="@+id/group_container"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo_album_white_24dp"
+            android:background="@android:color/transparent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/selected_album"
+            android:text="@string/album_default"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/camera_snap_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_camera_white_48dp"
+        android:background="@android:color/transparent"/>
 
 </RelativeLayout>

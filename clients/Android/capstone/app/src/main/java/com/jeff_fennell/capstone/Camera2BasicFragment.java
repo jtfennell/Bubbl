@@ -42,6 +42,7 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -57,12 +58,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.cloudinary.utils.ObjectUtils;
 import com.jeff_fennell.capstone.entities.Group;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -70,6 +72,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -250,7 +253,6 @@ public class Camera2BasicFragment extends Fragment
         public void onImageAvailable(ImageReader reader) {
             mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
         }
-
     };
 
     /**
@@ -279,6 +281,11 @@ public class Camera2BasicFragment extends Fragment
      * Whether the current camera device supports Flash or not.
      */
     private boolean mFlashSupported;
+
+    /**
+     * Orientation of the camera sensor
+     */
+    private int mSensorOrientation;
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -421,7 +428,9 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
+        View layout = inflater.inflate(R.layout.fragment_camera2_basic, container, false);
+        layout.findViewById(R.id.camera_snap_button).setOnClickListener(this);
+        return layout;
     }
 
     @Override
@@ -433,7 +442,7 @@ public class Camera2BasicFragment extends Fragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+        mFile = new File(getActivity().getFilesDir(), "pic.jpg");
     }
 
     @Override
@@ -497,19 +506,19 @@ public class Camera2BasicFragment extends Fragment
                 // Find out if we need to swap dimension to get the preview size relative to sensor
                 // coordinate.
                 int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-                int sensorOrientation =
+                mSensorOrientation =
                         characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
                 boolean swappedDimensions = false;
                 switch (displayRotation) {
                     case Surface.ROTATION_0:
                     case Surface.ROTATION_180:
-                        if (sensorOrientation == 90 || sensorOrientation == 270) {
+                        if (mSensorOrientation == 90 || mSensorOrientation == 270) {
                             swappedDimensions = true;
                         }
                         break;
                     case Surface.ROTATION_90:
                     case Surface.ROTATION_270:
-                        if (sensorOrientation == 0 || sensorOrientation == 180) {
+                        if (mSensorOrientation == 0 || mSensorOrientation == 180) {
                             swappedDimensions = true;
                         }
                         break;
@@ -735,13 +744,6 @@ public class Camera2BasicFragment extends Fragment
     }
 
     /**
-     * Initiate a still image capture.
-     */
-    private void takePicture() {
-        lockFocus();
-    }
-
-    /**
      * Lock the focus as the first step for a still image capture.
      */
     private void lockFocus() {
@@ -798,7 +800,7 @@ public class Camera2BasicFragment extends Fragment
 
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
 
             CameraCaptureSession.CaptureCallback CaptureCallback
                     = new CameraCaptureSession.CaptureCallback() {
@@ -807,8 +809,7 @@ public class Camera2BasicFragment extends Fragment
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
-                    Log.d(TAG, mFile.toString());
+                    Log.d(TAG, mFile.getAbsolutePath().toString());
                     unlockFocus();
                 }
             };
@@ -819,6 +820,20 @@ public class Camera2BasicFragment extends Fragment
             e.printStackTrace();
         }
     }
+
+    /**
+     +     * Retrieves the JPEG orientation from the specified screen rotation.
+     +     *
+     +     * @param rotation The screen rotation.
+     +     * @return The JPEG orientation (one of 0, 90, 270, and 360)
+     +     */
+     private int getOrientation(int rotation) {
+     // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
+     // We have to take that into account and rotate JPEG properly.
+     // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
+     // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
+        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+     }
 
     /**
      * Unlock the focus. This method should be called when still image capture sequence is
@@ -843,18 +858,7 @@ public class Camera2BasicFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.info: {
-                Activity activity = getActivity();
-                if (null != activity) {
-                    new AlertDialog.Builder(activity)
-                            .setMessage(R.string.intro_message)
-                            .setPositiveButton(android.R.string.ok, null)
-                            .show();
-                }
-                break;
-            }
-        }
+        lockFocus();
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
@@ -878,7 +882,7 @@ public class Camera2BasicFragment extends Fragment
          */
         private final File mFile;
 
-        public ImageSaver(Image image, File file) {
+        public ImageSaver(Image image, File file ) {
             mImage = image;
             mFile = file;
         }
@@ -889,20 +893,45 @@ public class Camera2BasicFragment extends Fragment
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
             FileOutputStream output = null;
-            try {
-                output = new FileOutputStream(mFile);
-                output.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                mImage.close();
-                if (null != output) {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            UpLoadImageTask uploadImage = new UpLoadImageTask(output, bytes);
+            uploadImage.execute();
+        }
+
+        public class UpLoadImageTask extends AsyncTask<Void, Void, Void> {
+            private FileOutputStream output;
+            private byte[] bytes;
+
+            public UpLoadImageTask(FileOutputStream output, byte[] bytes) {
+                this.output = output;
+                this.bytes = bytes;
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    output = new FileOutputStream(mFile);
+                    output.write(bytes);
+                    InputStream is = new ByteArrayInputStream(bytes);
+                    Map uploadResult = CloudinaryManager.getInstance().uploader().upload(is, ObjectUtils.asMap(
+                            "api_key", CloudinaryManager.CLOUDINARY_API_KEY,
+                            "api_secret", CloudinaryManager.CLOUDINARY_SECRET_KEY
+                    ));
+                    Utils.getClient().
+                } catch (java.io.FileNotFoundException e ) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    mImage.close();
+                    if (null != output) {
+                        try {
+                            output.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                return null;
             }
         }
 
@@ -999,8 +1028,9 @@ public class Camera2BasicFragment extends Fragment
     private void launchGroupsActivity() {
         Intent groupsActivity = new Intent(getActivity(), Groups.class);
         Bundle groupPayload = new Bundle();
-        groupPayload.putSerializable("groupList", (Serializable)((CameraActivity) getActivity()).getGroups());
+        groupPayload.putSerializable("groupList", (Serializable) ((CameraActivity) getActivity()).getGroups());
         groupsActivity.putExtras(groupPayload);
         startActivity(groupsActivity);
     }
+
 }

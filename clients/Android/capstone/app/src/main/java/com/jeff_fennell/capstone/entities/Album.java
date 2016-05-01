@@ -2,7 +2,9 @@ package com.jeff_fennell.capstone.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Album {
+import java.io.Serializable;
+
+public class Album implements Serializable{
     String name;
     @SerializedName("album_id")
     long albumId;

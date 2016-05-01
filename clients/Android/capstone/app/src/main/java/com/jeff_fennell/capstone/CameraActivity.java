@@ -18,16 +18,23 @@ package com.jeff_fennell.capstone;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+import com.jeff_fennell.capstone.entities.Album;
 import com.jeff_fennell.capstone.entities.Group;
-
 import java.util.List;
 
-public class CameraActivity extends Activity implements SelectGroupDialog.OnGroupSelectedListener {
-
+public class CameraActivity extends Activity implements
+        SelectGroupDialog.OnGroupSelectedListener,
+        SelectAlbumDialog.OnAlbumSelectListener {
+    private Group selectedGroup;
+    private Album selectedAlbum;
+    public final static String GROUP_KEY = "group";
     private List<Group> groups = null;
 
     @Override
@@ -48,7 +55,8 @@ public class CameraActivity extends Activity implements SelectGroupDialog.OnGrou
     @Override
     protected void onStart() {
         super.onStart();
-       promptUserForGroup(null);
+       promptUserForGroupAndAlbum(null);
+
     }
 
     @Override
@@ -56,15 +64,38 @@ public class CameraActivity extends Activity implements SelectGroupDialog.OnGrou
         moveTaskToBack(true);
     }
 
-    public void promptUserForGroup(View view) {
+    public void promptUserForGroupAndAlbum(View view) {
         DialogFragment newFragment = new SelectGroupDialog();
         newFragment.show(getFragmentManager(), SelectGroupDialog.FRAGMENT_TAG);
     }
 
+    public void promptUserForAlbum() {
+        Bundle args = new Bundle();
+        args.putSerializable(GROUP_KEY, selectedGroup);
+        DialogFragment selectAlbum = new SelectAlbumDialog();
+        selectAlbum.setArguments(args);
+        selectAlbum.show(getFragmentManager(), SelectAlbumDialog.FRAGMENT_TAG);
+    }
+
     @Override
-    public void updateGroupSelected(Group groupSelected) {
+    public void handleGroupSelected(Group groupSelected) {
         Camera2BasicFragment cameraFragment = (Camera2BasicFragment)getFragmentManager().findFragmentByTag(Camera2BasicFragment.FRAGMENT_TAG);
         cameraFragment.updateGroupInfo(groupSelected);
+        selectedGroup = groupSelected;
+        if (groupSelected != null) {
+            promptUserForAlbum();
+        }
+    }
+
+    @Override
+    public void updateSelectedAlbum(Album album) {
+        Fragment selectAlbumFragment = getFragmentManager()
+            .findFragmentByTag(SelectAlbumDialog.FRAGMENT_TAG);
+
+        getFragmentManager().beginTransaction().remove(selectAlbumFragment).commit();
+        TextView selectedAlbum = (TextView)findViewById(R.id.selected_album);
+        selectedAlbum.setText(album.getName());
+        this.selectedAlbum = album;
     }
 
     public List<Group> getGroups() {

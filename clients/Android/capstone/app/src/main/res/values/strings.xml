@@ -90,4 +90,7 @@
     <string name="album_created">Album created</string>
     <string name="album_create_fail">Failed to create album.</string>
     <string name="create_album_bad_name">Please enter an album name</string>
+    <string name="album_dialog_title">Select Album</string>
+    <string name="group_default">None selected</string>
+    <string name="album_default">None selected</string>
 </resources>

@@ -193,14 +193,14 @@ public class SelectGroupDialog extends DialogFragment {
     }
 
     public interface OnGroupSelectedListener {
-        void updateGroupSelected(Group group);
+        void handleGroupSelected(Group group);
     }
 
     private void bindOnClickListener() {
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((SelectGroupDialog.OnGroupSelectedListener) getActivity()).updateGroupSelected((Group) parent.getItemAtPosition(position));
+                ((SelectGroupDialog.OnGroupSelectedListener) getActivity()).handleGroupSelected((Group) parent.getItemAtPosition(position));
             }
         };
 

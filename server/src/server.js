@@ -68,6 +68,9 @@ app.delete('/api/v1/albums', [requireAccessToken, albums.delete]);
 //add one to get all photos in an album
 app.use('/api/v1/albums', methodNotAllowed);
 
+// app.get('/api/v1/signature', [requireAccessToken, images.getUploadSignature]);
+// app.use('//api/v1/signature', methodNotAllowed);
+
 http.createServer(app).listen(HTTP_PORT);
 
 if (process.env.NODE_ENV !== 'test') {
