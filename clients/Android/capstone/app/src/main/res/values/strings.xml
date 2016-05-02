@@ -93,4 +93,6 @@
     <string name="album_dialog_title">Select Album</string>
     <string name="group_default">None selected</string>
     <string name="album_default">None selected</string>
+    <string name="title_activity_view_album_images">ViewAlbumImagesActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

@@ -1,0 +1,14 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ViewAlbumImagesActivityFragment">
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_photo_album_white_24dp"
+        android:id="@+id/album_image_list"
+        android:numColumns="2">
+    </GridView>
+</LinearLayout>

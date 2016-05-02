@@ -1,6 +1,7 @@
 package com.jeff_fennell.capstone;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -411,17 +413,31 @@ public class  GroupDetailView extends Activity implements
             return convertView;
         }
     }
-
-    private void loadAlbumPreviewImage() {
-
-    }
-
+    
     private void setUpAlbumList(List<Album> albums) {
         GridView albumList = (GridView)findViewById(R.id.album_list);
+        albumList.setOnItemClickListener(new AlbumSelectListener());
         albumList.setAdapter(new AlbumAdapter(this, albums));
     }
 
     private void setNoAlbumsMessage() {
 
+    }
+
+    public class AlbumSelectListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Album selectedAlbum = (Album)parent.getItemAtPosition(position);
+            Intent albumImageView = new Intent(
+                    getApplicationContext(),
+                    ViewAlbumImagesActivity.class
+            );
+            Bundle albumViewPayload = new Bundle();
+            albumViewPayload.putSerializable(Group.serializeKey, group);
+            albumViewPayload.putSerializable(Album.serializeKey, selectedAlbum);
+            albumImageView.putExtras(albumViewPayload);
+            startActivity(albumImageView);
+        }
     }
 }

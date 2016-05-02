@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.jeff_fennell.capstone.entities.Album;
 import com.jeff_fennell.capstone.entities.Group;
 import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.User;
@@ -154,6 +155,7 @@ public class SelectGroupDialog extends DialogFragment {
                     Call getGroupImage = Utils.getClient().getImages(
                             Image.GROUP_PROFILE,
                             group.getGroupId(),
+                            Album.NO_ALBUM,
                             UserProfile.getAuthenticationToken(getActivity())
                     );
 

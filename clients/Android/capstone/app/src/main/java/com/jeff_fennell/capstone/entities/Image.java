@@ -4,6 +4,7 @@ public class Image {
     public static final String GROUP_PROFILE = "groupProfile";
     public static final String USER_PROFILE = "userProfile";
     public static final String GROUP_ALL = "groupAll";
+    public static final String GROUP_ALBUM = "groupAlbum";
     private String url;
     private long image_id;
     private long date_uploaded;

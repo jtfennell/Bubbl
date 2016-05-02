@@ -34,7 +34,7 @@
         android:id="@+id/group_container"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:onClick="promptUserForGroup"
+        android:onClick="promptUserForGroupAndAlbum"
         android:longClickable="true"
         android:layout_alignTop="@+id/camera_snap_button"
         android:layout_alignParentEnd="true">

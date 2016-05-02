@@ -916,7 +916,10 @@ public class Camera2BasicFragment extends Fragment
                             "api_key", CloudinaryManager.CLOUDINARY_API_KEY,
                             "api_secret", CloudinaryManager.CLOUDINARY_SECRET_KEY
                     ));
-                    Utils.getClient().
+//                    String imageId = uploadResult.get("")
+//                    Utils.getClient().
+                    String urlOfImage = (String)uploadResult.get("secure_url");
+                    System.out.println("hello");
                 } catch (java.io.FileNotFoundException e ) {
                     e.printStackTrace();
                 } catch (IOException e) {

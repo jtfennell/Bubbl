@@ -6,6 +6,7 @@ var images = {
         var typeOfImage = req.query.type;
         var groupId = req.query.groupId;
         var userId = req.query.userId;
+        var albumId = req.query.albumId;
 
         if (!typeOfImage) {
             return res.status(400).json({"message":"type required"});
@@ -80,6 +81,38 @@ var images = {
                             FROM groups, images
                             WHERE group_id=${groupId}
                             AND groups.group_image_id=images.image_id`
+                            , (err, result) => {
+                                if (err) {
+                                    console.log(err)
+                                    return res.status(500).json("internal server error");
+                                }
+
+                                return res.status(200).json(result.rows);
+                            }
+                        );
+                    }
+                );
+            }, groupAlbum: () => {
+                console.log(groupId)
+                console.log(albumId)
+                if (!groupId || !albumId) {
+                    return res.status(400).json({"message":"group and albumId required"});
+                };
+                database.query(
+                    `SELECT * 
+                    FROM group_contains_user
+                    WHERE group_id=${groupId}
+                    AND user_id=${req.authenticatedUser.userId}`,
+                    (err, result) => {
+                        if (!result.rows[0]) {
+                            return res.status(403).json({"message":"forbidden"});
+                        };
+
+                        database.query(
+                            `SELECT images.image_id, date_uploaded, url
+                            FROM images, album_contains_image   
+                            WHERE album_contains_image.album_id=${albumId}
+                            AND images.image_id=album_contains_image.image_id`
                             , (err, result) => {
                                 if (err) {
                                     console.log(err)

@@ -15,6 +15,9 @@ public class Album implements Serializable{
     @SerializedName("created_by")
     long createdBy;
 
+    public static final String serializeKey = "ALBUM";
+    public static final long NO_ALBUM = -1;
+
     public Album() {
 
     }

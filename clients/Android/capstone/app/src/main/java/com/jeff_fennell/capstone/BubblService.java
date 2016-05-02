@@ -54,7 +54,7 @@ public interface BubblService {
     Call<Void> deleteMemberFromGroup(@Path("memberId") long memberId, @Query("groupId")long groupId, @Header("x-access-token") String token);
 
     @GET("images")
-    Call<List<Image>> getImages(@Query("type") String type, @Query("groupId")long groupId, @Header("x-access-token") String token);
+    Call<List<Image>> getImages(@Query("type") String type, @Query("groupId")long groupId, @Query("albumId")long albumId, @Header("x-access-token") String token);
 
     @GET("images")
     Call<List<Image>> getProfileImage(@Query("type") String type, @Query("userId") long userId, @Header("x-access-token") String token);
@@ -67,4 +67,5 @@ public interface BubblService {
 
     @GET("albums/preview")
     Call<List<Image>> getAlbumPreviewImages(@Query("groupId") long groupId, @Query("albumId") long albumId, @Header("x-access-token") String token);
+
 }
