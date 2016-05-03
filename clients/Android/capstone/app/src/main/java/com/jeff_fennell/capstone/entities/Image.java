@@ -8,7 +8,20 @@ public class Image {
     private String url;
     private long image_id;
     private long date_uploaded;
+    private String type;
+    private long albumId;
+    private long groupId;
 
+    public Image() {
+
+    }
+
+    public Image(String url,long albumId, long groupId, String type ) {
+        this.url = url;
+        this.albumId = albumId;
+        this.groupId = groupId;
+        this.type = type;
+    }
 
     public String getUrl() {
         return url;
@@ -33,4 +46,14 @@ public class Image {
     public void setDate_uploaded(long date_uploaded) {
         this.date_uploaded = date_uploaded;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+
 }

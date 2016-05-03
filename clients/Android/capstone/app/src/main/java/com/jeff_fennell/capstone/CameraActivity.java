@@ -19,7 +19,6 @@ package com.jeff_fennell.capstone;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -32,6 +31,7 @@ import java.util.List;
 public class CameraActivity extends Activity implements
         SelectGroupDialog.OnGroupSelectedListener,
         SelectAlbumDialog.OnAlbumSelectListener {
+
     private Group selectedGroup;
     private Album selectedAlbum;
     public final static String GROUP_KEY = "group";
@@ -79,11 +79,19 @@ public class CameraActivity extends Activity implements
 
     @Override
     public void handleGroupSelected(Group groupSelected) {
-        Camera2BasicFragment cameraFragment = (Camera2BasicFragment)getFragmentManager().findFragmentByTag(Camera2BasicFragment.FRAGMENT_TAG);
-        cameraFragment.updateGroupInfo(groupSelected);
-        selectedGroup = groupSelected;
+        TextView groupSelectedView = (TextView) findViewById(R.id.camera_group_selected);
+        groupSelectedView.setText(groupSelected.getName());
+        removeGroupFragment();
+        this.selectedGroup = groupSelected;
         if (groupSelected != null) {
             promptUserForAlbum();
+        }
+    }
+
+    public void removeGroupFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(SelectGroupDialog.FRAGMENT_TAG);
+        if(fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
         }
     }
 
@@ -104,6 +112,22 @@ public class CameraActivity extends Activity implements
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    public Group getSelectedGroup() {
+        return selectedGroup;
+    }
+
+    public void setSelectedGroup(Group selectedGroup) {
+        this.selectedGroup = selectedGroup;
+    }
+
+    public Album getSelectedAlbum() {
+        return selectedAlbum;
+    }
+
+    public void setSelectedAlbum(Album selectedAlbum) {
+        this.selectedAlbum = selectedAlbum;
     }
 
 }

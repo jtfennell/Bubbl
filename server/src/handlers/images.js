@@ -112,7 +112,8 @@ var images = {
                             `SELECT images.image_id, date_uploaded, url
                             FROM images, album_contains_image   
                             WHERE album_contains_image.album_id=${albumId}
-                            AND images.image_id=album_contains_image.image_id`
+                            AND images.image_id=album_contains_image.image_id
+                            ORDER by images.image_id DESC`
                             , (err, result) => {
                                 if (err) {
                                     console.log(err)
@@ -134,9 +135,10 @@ var images = {
     },
 
     add: (req, res) => {
-        var typeOfImage = req.query.type;
-        var groupId = req.query.groupId;
-        var imageUrl = req.query.imageUrl;
+        var typeOfImage = req.body.type;
+        var groupId = req.body.groupId;
+        var imageUrl = req.body.url;
+        var albumId = req.body.albumId;
 
         if (!(typeOfImage && imageUrl)) {
             return res.status(400).json({"message":"bad request"});
@@ -185,6 +187,58 @@ var images = {
                 if (!groupId) {
                     return res.status(400).json({"message":"group required"});
                 };                
+            },
+            'groupAlbum': () => {
+                console.log(typeOfImage, groupId, albumId)
+                if (!typeOfImage || !groupId || !albumId) {
+                    return res.status(400).json("bad request")
+                };
+
+                database.query(
+                    `SELECT * 
+                    FROM group_contains_user
+                    WHERE group_id=${groupId}
+                    AND user_id=${req.authenticatedUser.userId}`,
+                    (err, result) => {
+                        if (!result.rows[0]) {
+                            return res.status(403).json({"message":"forbidden"});
+                        };
+
+                        database.query(
+                            `INSERT INTO images(url, date_uploaded)
+                            VALUES ('${imageUrl}', '${Date.now()}')
+                            RETURNING image_id`
+                            , (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(500).json("err");
+                                }
+                                var imageId = result.rows[0].image_id;
+
+                                database.query(
+                                    `INSERT INTO user_uploads_image(user_id, image_id)
+                                    VALUES (${req.authenticatedUser.userId}, ${imageId})`
+                                    , (err, result) => {
+                                        if (err) {
+                                            console.log(err);
+                                            return res.status(500).json("err");
+                                        }
+                                        database.query(
+                                            `INSERT INTO album_contains_image(album_id, image_id)
+                                            VALUES (${albumId}, ${imageId})`
+                                            , (err, result) => {
+                                                if (err) {
+                                                    console.log(err);
+                                                    return res.status(500).json("err");
+                                                }
+                                                return res.status(200).json("image saved")                                    }
+                                        )                                  
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
             }
         }
         if(!addImage[typeOfImage]) {

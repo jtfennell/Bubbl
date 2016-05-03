@@ -1,6 +1,5 @@
 package com.jeff_fennell.capstone;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -29,6 +28,7 @@ public class ViewAlbumImagesActivity extends Activity {
         Bundle payload = getIntent().getExtras();
         group = (Group)payload.get(Group.serializeKey);
         album = (Album)payload.get(Album.serializeKey);
+        getActionBar().setTitle(album.getName());
         setContentView(R.layout.activity_view_album_images);
     }
 

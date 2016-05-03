@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Camera;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -56,10 +57,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.cloudinary.utils.ObjectUtils;
-import com.jeff_fennell.capstone.entities.Group;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -85,8 +84,6 @@ public class Camera2BasicFragment extends Fragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
-//    private static final long groupToSendTo;
-//    private static final long albumToPostTo;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -858,7 +855,14 @@ public class Camera2BasicFragment extends Fragment
 
     @Override
     public void onClick(View view) {
-        lockFocus();
+        CameraActivity parent = (CameraActivity)getActivity();
+        if (parent.getSelectedGroup() == null) {
+            Utils.toast(getActivity(), R.string.no_group_selected_warning, Toast.LENGTH_LONG);
+        } else if (parent.getSelectedAlbum() == null) {
+            Utils.toast(getActivity(), R.string.no_album_selected_warning,Toast.LENGTH_LONG);
+        } else {
+            lockFocus();
+        }
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
@@ -868,10 +872,11 @@ public class Camera2BasicFragment extends Fragment
         }
     }
 
+
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
+    private class ImageSaver implements Runnable {
 
         /**
          * The JPEG image
@@ -913,12 +918,21 @@ public class Camera2BasicFragment extends Fragment
                     output.write(bytes);
                     InputStream is = new ByteArrayInputStream(bytes);
                     Map uploadResult = CloudinaryManager.getInstance().uploader().upload(is, ObjectUtils.asMap(
-                            "api_key", CloudinaryManager.CLOUDINARY_API_KEY,
-                            "api_secret", CloudinaryManager.CLOUDINARY_SECRET_KEY
+                        "api_key", CloudinaryManager.CLOUDINARY_API_KEY,
+                        "api_secret", CloudinaryManager.CLOUDINARY_SECRET_KEY
                     ));
-//                    String imageId = uploadResult.get("")
-//                    Utils.getClient().
                     String urlOfImage = (String)uploadResult.get("secure_url");
+                    com.jeff_fennell.capstone.entities.Image toSave = new com.jeff_fennell.capstone.entities.Image(
+                        urlOfImage,
+                        ((CameraActivity)getActivity()).getSelectedAlbum().getAlbumId(),
+                        ((CameraActivity)getActivity()).getSelectedGroup().getGroupId(),
+                        com.jeff_fennell.capstone.entities.Image.GROUP_ALBUM
+                    );
+                    Utils.getClient().saveImage(
+                        toSave,
+                        UserProfile.getAuthenticationToken(getActivity())
+                    ).execute();
+
                     System.out.println("hello");
                 } catch (java.io.FileNotFoundException e ) {
                     e.printStackTrace();
@@ -1004,18 +1018,6 @@ public class Camera2BasicFragment extends Fragment
         });
     }
 
-    public void updateGroupInfo(Group group) {
-       TextView groupSelected = (TextView) getView().findViewById(R.id.camera_group_selected);
-        groupSelected.setText(group.getName());
-        removeGroupFragment();
-    }
-
-    public void removeGroupFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(SelectGroupDialog.FRAGMENT_TAG);
-        if(fragment != null) {
-            getFragmentManager().beginTransaction().remove(fragment).commit();
-        }
-    }
 
     private void setUpGroupLongClick() {
         LinearLayout groupView = (LinearLayout)getView().findViewById(R.id.group_container);

@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -79,6 +80,8 @@ public class  GroupDetailView extends Activity implements
                             R.string.album_created,
                             Toast.LENGTH_LONG
                     );
+                    Album newAlbum = response.body();
+                    ((ArrayAdapter<Album>)((GridView) findViewById(R.id.album_list)).getAdapter()).add(newAlbum);
                 } else {
                     Utils.toast(
                             getApplicationContext(),

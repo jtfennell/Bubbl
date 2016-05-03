@@ -38,6 +38,7 @@ var albums = {
             database.query(
                 `SELECT * FROM images NATURAL JOIN album_contains_image
                 WHERE album_id=${albumId}
+                ORDER BY images.image_id DESC
                 LIMIT 5`,
                 (err, result) => {
                     if (err) {
@@ -50,7 +51,7 @@ var albums = {
     },
 
     create: (req, res) => {
-        var groupId = req.body.groupId;
+        var groupId = req.body.group_id;
         var albumName = req.body.name;
         var timeNow = new Date().getTime();
 

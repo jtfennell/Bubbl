@@ -35,6 +35,8 @@ public class SelectAlbumDialog extends DialogFragment {
     public void onStart() {
         super.onStart();
         populateAlbumList();
+        ((CameraActivity)getActivity()).setSelectedAlbum(null);
+        ((TextView)(getActivity()).findViewById(R.id.selected_album)).setText(getString(R.string.album_default));
         setAlbumSelectListener();
     }
 
@@ -109,4 +111,13 @@ public class SelectAlbumDialog extends DialogFragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    public interface OnDestroyListener {
+        void checkIfAlbumSelected();
+    }
 }

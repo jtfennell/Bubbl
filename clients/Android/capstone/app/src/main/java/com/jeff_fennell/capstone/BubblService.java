@@ -68,4 +68,6 @@ public interface BubblService {
     @GET("albums/preview")
     Call<List<Image>> getAlbumPreviewImages(@Query("groupId") long groupId, @Query("albumId") long albumId, @Header("x-access-token") String token);
 
+    @POST("images")
+    Call<Void> saveImage(@Body Image image, @Header("x-access-token") String token);
 }

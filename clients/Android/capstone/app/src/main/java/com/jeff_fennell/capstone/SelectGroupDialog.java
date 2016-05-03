@@ -80,9 +80,8 @@ public class SelectGroupDialog extends DialogFragment {
         window.setLayout((int) (height * .5), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
         DownloadGroupsAndMembersTask getGroups = new DownloadGroupsAndMembersTask();
-        getGroups.execute(null, null,null);
+        getGroups.execute(null, null, null);
     }
-
 
     class GroupsAdapter extends ArrayAdapter{
         public GroupsAdapter(List<Group> groups) {

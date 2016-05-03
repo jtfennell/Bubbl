@@ -69,8 +69,8 @@ INSERT INTO users(username, email, password, first_name, last_name) values('dola
 INSERT INTO users(username, email, password, first_name, last_name) values('whatAreThose', 'fake123@email.com', crypt('password',gen_salt('bf')), 'Joseph', 'Barbosa');
 INSERT INTO users(username, email, password, first_name, last_name) values('nails', 'fake123@email.com', crypt('password',gen_salt('bf')), 'Misa', 'Pham ');
 
-INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/e_trim/w_150,h_150,c_thumb,g_face/bike.jpg',1459827876);
-INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/w_250,h_250,c_thumb,g_face/woman.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/e_trim/w_150,h_150,c_thumb,g_face/v1462255800/kat_ro5vb1.jpg',1459827876);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/e_trim/w_150,h_150,c_thumb,g_face/v1462256019/misa_egetd5.jpg', 1459921220);
 INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
 UPDATE users SET image_id='1' where user_id='2';
 INSERT INTO user_uploads_image (user_id, image_id) values (1,2);
@@ -101,6 +101,23 @@ INSERT INTO images(url, date_uploaded) values('http://res-4.cloudinary.com/demo/
 INSERT INTO images(url, date_uploaded) values('http://res-2.cloudinary.com/demo/image/upload/c_thumb,g_face,h_100,r_max,w_120/f_auto/face_left.jpg', 1459921220);
 INSERT INTO images(url, date_uploaded) values('http://res-5.cloudinary.com/demo/image/upload/c_fill,e_saturation:-70,h_100,w_120/f_auto/horses.jpg', 1459921220);
 INSERT INTO images(url, date_uploaded) values('http://res-1.cloudinary.com/demo/image/upload/c_fill,h_100,w_120/c_fill,e_brightness:100,h_100,u_site_bg.jpg,w_120/f_auto/smartphone.png', 1459921220);
+INSERT INTO images(url, date_uploaded) values('http://res.cloudinary.com/demo/image/upload/lady.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/v1462257338/baeAndBro_ypq7vj.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/c_thumb,g_face/v1462258766/josh_dtla5u.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/c_thumb,g_face/v1462259916/matt_ejyhb0.jpg', 1459921220);
+INSERT INTO images(url, date_uploaded) values('https://res.cloudinary.com/sdfjgh87sdflkghsdflgsd3453a/image/upload/v1462260227/joe_rm4asy.jpg', 1459921220);
+
+INSERT INTO user_uploads_image (user_id, image_id) values (1,13);
+UPDATE users SET image_id='13' where user_id='3';
+
+INSERT INTO user_uploads_image (user_id, image_id) values (1,14);
+UPDATE users SET image_id='14' where user_id='4';
+
+INSERT INTO user_uploads_image (user_id, image_id) values (1,1);
+UPDATE groups SET group_image_id='12' where group_id='3';
+
+INSERT INTO user_uploads_image (user_id, image_id) values (5,15);
+UPDATE users SET image_id='15' where user_id='5';
 
 INSERT INTO group_contains_image(group_id, image_id) values(1,3);
 INSERT INTO group_contains_image(group_id, image_id) values(1,6);
@@ -120,3 +137,5 @@ INSERT INTO album_contains_image(album_id, image_id) values(1,7);
 INSERT INTO album_contains_image(album_id, image_id) values(1,8);
 INSERT INTO album_contains_image(album_id, image_id) values(1,9);
 INSERT INTO album_contains_image(album_id, image_id) values(1,10);
+INSERT INTO album_contains_image(album_id, image_id) values(1,11);
+

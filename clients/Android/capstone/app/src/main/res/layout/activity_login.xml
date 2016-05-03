@@ -27,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login_password_hint"
-            android:id="@+id/login_password"/>
+            android:id="@+id/login_password"
+            android:password="true" />
     </android.support.design.widget.TextInputLayout>
     <Button
         android:layout_width="wrap_content"
