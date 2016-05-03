@@ -67,6 +67,13 @@
                 android:onClick="openCreateAlbumDialog"/>
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_albums_message"
+        android:layout_marginTop="@dimen/name_margin"
+        android:text="@string/no_album_create"
+        android:visibility="gone"/>
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

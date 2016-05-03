@@ -26,6 +26,8 @@ import com.jeff_fennell.capstone.entities.Image;
 import com.jeff_fennell.capstone.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import it.sephiroth.android.library.widget.HListView;
 import retrofit2.Call;
@@ -57,12 +59,14 @@ public class  GroupDetailView extends Activity implements
         } else {
             groupEmptyMessage.setVisibility(View.VISIBLE);
         }
-        HListView memberList = (HListView)findViewById(R.id.members_in_group);
-        memberList.setAdapter(new MemberAdapter(group.getMembers(), this));
+        if (group.getMembers() != null) {
+            HListView memberList = (HListView)findViewById(R.id.members_in_group);
+            memberList.setAdapter(new MemberAdapter(group.getMembers(), this));
+        }
     }
 
     @Override
-    public void createAlbum(String albumName) {
+    public void createAlbum(final String albumName) {
         Album newAlbum = new Album(group.getGroupId(), albumName, UserProfile.getUserId(this));
         Call<Album> createAlbum = Utils
            .getClient()
@@ -71,35 +75,7 @@ public class  GroupDetailView extends Activity implements
                UserProfile.getAuthenticationToken(this)
            );
 
-        createAlbum.enqueue(new Callback<Album>() {
-            @Override
-            public void onResponse(Call<Album> call, Response<Album> response) {
-                if (response.isSuccessful()) {
-                    Utils.toast(
-                            getApplicationContext(),
-                            R.string.album_created,
-                            Toast.LENGTH_LONG
-                    );
-                    Album newAlbum = response.body();
-                    ((ArrayAdapter<Album>)((GridView) findViewById(R.id.album_list)).getAdapter()).add(newAlbum);
-                } else {
-                    Utils.toast(
-                            getApplicationContext(),
-                            R.string.album_create_fail,
-                            Toast.LENGTH_LONG
-                    );
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Album> call, Throwable t) {
-                Utils.toast(
-                        getApplicationContext(),
-                        R.string.album_create_fail,
-                        Toast.LENGTH_LONG
-                );
-            }
-        });
+        createAlbum.enqueue(new CreateAlbumCallback(this, albumName));
     }
 
     public class MemberAdapter extends ArrayAdapter<User>{
@@ -313,10 +289,11 @@ public class  GroupDetailView extends Activity implements
         protected void onPostExecute(List<Album> albums) {
             super.onPostExecute(albums);
 
-            if (albums.size() > 0) {
-                setUpAlbumList(albums);
+            if (albums.size() == 0) {
+                findViewById(R.id.no_albums_message).setVisibility(View.VISIBLE);
             } else {
-                setNoAlbumsMessage();
+                findViewById(R.id.no_albums_message).setVisibility(View.GONE);
+                setUpAlbumList(albums);
             }
 
         }
@@ -341,7 +318,8 @@ public class  GroupDetailView extends Activity implements
             Album album = getItem(position);
 
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.album_preview, null);
+                GridView albumList = (GridView)findViewById(R.id.album_list);
+                convertView = getLayoutInflater().inflate(R.layout.album_preview, albumList, false);
                 holder = new ViewHolder();
 
                 holder.image1 = (ImageView) convertView.findViewById(R.id.image_1);
@@ -423,10 +401,6 @@ public class  GroupDetailView extends Activity implements
         albumList.setAdapter(new AlbumAdapter(this, albums));
     }
 
-    private void setNoAlbumsMessage() {
-
-    }
-
     public class AlbumSelectListener implements AdapterView.OnItemClickListener {
 
         @Override
@@ -442,5 +416,62 @@ public class  GroupDetailView extends Activity implements
             albumImageView.putExtras(albumViewPayload);
             startActivity(albumImageView);
         }
+    }
+
+    public class CreateAlbumCallback implements Callback<Album> {
+        private WeakReference<Activity> activity;
+        private String albumName;
+
+        public CreateAlbumCallback(Activity activity, String albumName) {
+            this.activity = new WeakReference(activity);
+            this.albumName = albumName;
+        }
+            @Override
+            public void onResponse(Call<Album> call, Response<Album> response) {
+                if (response.isSuccessful()) {
+                    Utils.toast(
+                            getApplicationContext(),
+                            R.string.album_created,
+                            Toast.LENGTH_LONG
+                    );
+
+                    Album newAlbum = response.body();
+                    GridView albumList = (GridView)findViewById(R.id.album_list);
+                    ArrayAdapter<Album> albums = ((ArrayAdapter<Album>) albumList.getAdapter());
+                    if (albums == null) {
+                        AlbumAdapter adapter = new AlbumAdapter(activity.get(), new ArrayList<Album>());
+                        albumList.setAdapter(adapter);
+                        adapter.add(newAlbum);
+                    } else {
+                        albums.add(newAlbum);
+                    }
+                    findViewById(R.id.no_albums_message).setVisibility(View.GONE);
+                    Fragment createAlbumFragment = getFragmentManager().findFragmentByTag(CreateAlbumDialog.FRAGMENT_TAG);
+                    activity.get().getFragmentManager().beginTransaction().remove(createAlbumFragment).commit();
+                } else {
+                    if (response.code() == 409) {
+                        Utils.toastDynamic(
+                                getApplicationContext(),
+                                String.format(getString(R.string.duplicate_album_message), albumName),
+                                Toast.LENGTH_LONG
+                        );
+                    } else {
+                        Utils.toast(
+                                getApplicationContext(),
+                                R.string.album_create_fail,
+                                Toast.LENGTH_LONG
+                        );
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Album> call, Throwable t) {
+                Utils.toast(
+                        getApplicationContext(),
+                        R.string.album_create_fail,
+                        Toast.LENGTH_LONG
+                );
+            }
     }
 }

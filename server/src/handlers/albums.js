@@ -61,28 +61,40 @@ var albums = {
 
         confirmUserInGroupAndThen(req, res, groupId, () => {
             database.query(
-                `INSERT INTO albums(name, created_on, group_id, created_by)
-                 VALUES ('${albumName}', '${timeNow}', '${groupId}','${req.authenticatedUser.userId}')
-                 RETURNING name, created_on, group_id, created_by, album_id`
-                ,(err, result) => {
+                `SELECT * FROM albums
+                WHERE albums.group_id='${groupId}'
+                AND albums.name='${albumName}'`,
+                (err, result) => {
                     if (err) {
-                        if (+err.code === 23505) {
-                            return res.status(409).json('duplicate album')
-                        } else {
-                            console.log(err)
-                            return res.status(500).json('err');
-                        }
+                        console.log(err);
+                        return res.status(500).json('err');
                     };
 
-                    var newAlbum = result.rows[0];
-                    return res.status(200).json({
-                        name:newAlbum.name,
-                        createdBy:newAlbum.created_by,
-                        createdOn:newAlbum.created_on,
-                        groupId:newAlbum.group_id,
-                        albumId:newAlbum.album_id
-                    });
-                })
+                    if (result.rows.length > 0) {
+                        return res.status(409).json('duplicate album')
+                    };
+                    database.query(
+                        `INSERT INTO albums(name, created_on, group_id, created_by)
+                         VALUES ('${albumName}', '${timeNow}', '${groupId}','${req.authenticatedUser.userId}')
+                         RETURNING name, created_on, group_id, created_by, album_id`
+                        ,(err, result) => {
+                            if (err) {
+                                console.log(err)
+                                return res.status(500).json('err');
+                            };
+
+                            var newAlbum = result.rows[0];
+                            return res.status(200).json({
+                                name:newAlbum.name,
+                                createdBy:newAlbum.created_by,
+                                createdOn:newAlbum.created_on,
+                                groupId:newAlbum.group_id,
+                                albumId:newAlbum.album_id
+                            });
+                        }
+                    )
+                }
+            )
         });
 
     },

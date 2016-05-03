@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/group_name"
-            android:textSize="30sp"
+            android:textSize="@dimen/group_and_album_name"
             android:text="Group 1"
             android:textAllCaps="true"
             android:letterSpacing=".1"/>

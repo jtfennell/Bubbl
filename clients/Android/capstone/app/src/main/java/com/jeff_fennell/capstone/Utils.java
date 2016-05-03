@@ -26,6 +26,11 @@ public class Utils {
         toast.show();
     }
 
+    public static void toastDynamic(Context context, String resourceString, int length) {
+        Toast toast = Toast.makeText(context, resourceString, length);
+        toast.show();
+    }
+
     public static BubblService getClient() {
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())

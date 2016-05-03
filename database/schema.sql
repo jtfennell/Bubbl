@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS user_uploads_image (
 
 CREATE TABLE IF NOT EXISTS albums (
     album_id   bigserial PRIMARY KEY,
-    name       text UNIQUE NOT NULL,
+    name       text NOT NULL,
     created_on bigint NOT NULL,
     group_id bigint NOT NULL references groups,
     created_by bigint NOT NULL references users

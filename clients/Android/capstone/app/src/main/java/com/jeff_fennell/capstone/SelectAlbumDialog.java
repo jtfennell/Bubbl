@@ -51,7 +51,11 @@ public class SelectAlbumDialog extends DialogFragment {
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
                     List<Album> albums = (List<Album>)response.body();
-                    showAlbumList(albums);
+                    if (albums.size() == 0) {
+                        getView().findViewById(R.id.no_albums_message).setVisibility(View.VISIBLE);
+                    } else {
+                        showAlbumList(albums);
+                    }
                 }
             }
 
@@ -63,8 +67,8 @@ public class SelectAlbumDialog extends DialogFragment {
     }
 
     private void showAlbumList(List<Album> albums) {
-        ListView albumList = (ListView)getView().findViewById(R.id.album_list);
-        albumList.setAdapter(new AlbumAdapter(getActivity(),albums));
+            ListView albumList = (ListView)getView().findViewById(R.id.album_list);
+            albumList.setAdapter(new AlbumAdapter(getActivity(),albums));
     }
 
     public class AlbumAdapter extends ArrayAdapter<Album> {
