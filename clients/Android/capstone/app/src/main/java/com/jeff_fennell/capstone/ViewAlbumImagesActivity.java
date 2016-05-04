@@ -54,11 +54,12 @@ public class ViewAlbumImagesActivity extends Activity {
         @Override
         protected void onPostExecute(List<Image> images) {
             super.onPostExecute(images);
-            if (images != null) {
+            if (images != null && images.size() > 0) {
                 GridView imageList = (GridView)findViewById(R.id.album_image_list);
                 imageList.setAdapter(new ImageAdapter(context.get(), images));
+            } else {
+                findViewById(R.id.no_images_message).setVisibility(View.VISIBLE);
             }
-            System.out.println("hello");
         }
 
         @Override

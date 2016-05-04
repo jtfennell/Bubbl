@@ -1,5 +1,6 @@
 package com.jeff_fennell.capstone;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -30,18 +31,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SelectGroupDialog extends DialogFragment {
-    private List<Group> groupsWithMembers;
     public static String FRAGMENT_TAG = "selectGroup";
-
-    Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.API_BASE_URL)
-            .build();
-    BubblService api = retrofit.create(BubblService.class);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +71,7 @@ public class SelectGroupDialog extends DialogFragment {
         window.setLayout((int) (width * 0.75), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setLayout((int) (height * .5), WindowManager.LayoutParams.WRAP_CONTENT);
         window.setGravity(Gravity.CENTER);
+        System.out.println(this);
         DownloadGroupsAndMembersTask getGroups = new DownloadGroupsAndMembersTask();
         getGroups.execute(null, null, null);
     }
@@ -142,11 +135,17 @@ public class SelectGroupDialog extends DialogFragment {
         @Override
         protected List<Group> doInBackground(Void... params) {
             List<Group> usersGroups = null;
-            Call<List<Group>> getGroups = api.getGroups(UserProfile.getAuthenticationToken(getActivity()));
+            Call<List<Group>> getGroups = Utils.getClient().getGroups(UserProfile.getAuthenticationToken(getActivity()));
             try {
                 usersGroups = getGroups.execute().body();
                 for (Group group : usersGroups) {
-                    Call<List<User>> getMembersInGroup = api.getMembersInGroup(group.getGroupId(), UserProfile.getAuthenticationToken(getActivity()));
+//                    Activity activity = getActivity();
+                    Call<List<User>> getMembersInGroup = Utils
+                            .getClient()
+                            .getMembersInGroup(
+                                    group.getGroupId(),
+                                    UserProfile.getAuthenticationToken(getActivity())
+                            );
                     List<User> membersInGroup = getMembersInGroup.execute().body();
                     removeThisUserFromMemberList(membersInGroup);
                     group.setMembers(membersInGroup);

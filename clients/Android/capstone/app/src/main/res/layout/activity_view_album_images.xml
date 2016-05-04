@@ -4,6 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ViewAlbumImagesActivityFragment">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_images_message"
+        android:text="@string/no_images_message"
+        android:visibility="gone"/>
     <GridView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

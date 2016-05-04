@@ -12,12 +12,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="1">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/group_name"
                 android:scrollbars="horizontal"
@@ -25,8 +21,10 @@
                 android:text="Group Name"
                 android:letterSpacing=".1"
                 android:textAllCaps="true"
-                android:layout_weight="1"
                 android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,10 +36,5 @@
                 android:id="@+id/delete_invite_button"
                 android:text="@string/delete_invite_button" />
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/group_members"
-            android:text="member1, member2, member3"/>
     </LinearLayout>
 </LinearLayout>

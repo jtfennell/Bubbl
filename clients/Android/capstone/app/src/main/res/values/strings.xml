@@ -100,4 +100,5 @@
     <string name="no_albums_message">This group doesn\'t have any albums. Create one in the group settings.</string>
     <string name="no_album_create">There are no albums yet. Tap create to make one!</string>
     <string name="duplicate_album_message">Album named %1$s already exists.</string>
+    <string name="no_images_message">There are no images in this album. Select this album and take some pictures to share with your friends.</string>
 </resources>
